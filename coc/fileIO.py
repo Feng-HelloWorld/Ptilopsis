@@ -1,5 +1,5 @@
 
-import card
+import coc.card
 
 def read_card_from_file(fileName,cardDict):
     '''

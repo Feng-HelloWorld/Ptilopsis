@@ -2,6 +2,8 @@ import nonebot
 import re
 from nonebot.typing import Context_T
 
+import coc.coc_main
+
 bot = nonebot.get_bot()
 
 #群消息处理
@@ -12,6 +14,8 @@ async def handle_group_message(ctx: Context_T):
     if is_only_text(ctx):
         msg=ctx.get('raw_message')
         print(msg)
+        if msg=='33445566f':
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=coc.coc_main.printCard())
 
 
 

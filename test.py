@@ -48,3 +48,6 @@ for i in range(1):
 
 s=''
 print(s.isdigit())
+
+a=print('sdf')
+print(a)

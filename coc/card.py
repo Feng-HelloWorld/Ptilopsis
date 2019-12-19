@@ -19,17 +19,22 @@ class investigator():
         data=str()
         i=0
         for key, value in self.stats.items():
-            data+="{:>12} {:<9}".format(key,str(value))
+            if key=='AGE_modify': key='Modi'
+            data+="{:<5} {:<9}".format(key,str(value))
             i+=1
-            if i%2==0:
+            if i%3==0:
                 data+='\n'
             
-        data=data+"="*20+"\n"
+        data=data+"="*40+"\n"
         for key, value in self.skills.items():
-            data+="{:>24} {:<9}\n".format(key,str(value))        
+            data+="{:<5} {:<12} {:<3}\n".format(key,value[0],value[1])    
+        data=data+"="*40+"\n"    
         for key, value in self.weapon.items():
-            data+="{:>24} {:<9}\n".format(key,str(value))  
+            data+="{:<5} {:<8} {:<3} {}\n".format(key,value[0],value[1],value[2])  
         return data
+
+    def __repr__(self):
+        return self.__str__()
 
 
     def add_stats(self,index,value):
@@ -56,7 +61,6 @@ class investigator():
             self.mov()
         elif index=="POW":
             self.san()
-
 
     def add_skill(self,cmd,name,value):
         '''
