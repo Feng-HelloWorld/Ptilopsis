@@ -35,12 +35,16 @@ print("Finall success:",sum(success)/50,"%")
 
 a=coc.card.investigator()
 for i in range(1):
-    print(a)
+    #print(a)
+    pass
     
 
 #print(31//5)
 
 #print(coc.card.build_and_DB(524))
 
-cardList=os.listdir('./coc/cards/')
+#cardList=os.listdir('./coc/cards/')
 #print(cardList)
+
+s=''
+print(s.isdigit())

@@ -10,6 +10,7 @@ class investigator():
         self.hp()
         self.mov()
         self.san()
+        self.mp() #此函数未完成
         #self.age_modify()
         self.skills=dict()
         self.weapon=dict()
@@ -29,6 +30,33 @@ class investigator():
         for key, value in self.weapon.items():
             data+="{:>24} {:<9}\n".format(key,str(value))  
         return data
+
+
+    def add_stats(self,index,value):
+        '''
+        修改调查员能力值及相应调整 \n
+        index: 能力值名称 str \n
+        num: 数值 int
+        '''
+        origin=self.stats[index]
+        self.stats[index]=value 
+        print(index+":",origin,"->",self.stats[index])        
+        if index=="STR":
+            self.build_and_DB()
+            self.mov()
+        elif index=="SIZ":
+            self.build_and_DB()
+            self.hp()
+            self.mov()
+        elif index=="CON":
+            self.hp()
+        elif index=="DEX":
+            self.mov()
+        elif index=="AGE":
+            self.mov()
+        elif index=="POW":
+            self.san()
+
 
     def add_skill(self,cmd,name,value):
         '''
@@ -153,6 +181,9 @@ class investigator():
         '''
         num=self.stats['POW']
         self.stats['SAN']=[num,num] #理智值表示为包含两个int的list，格式为[当前理智,最大理智]
+
+    def mp(self):
+        self.stats['MP']=[0,0]
 
 
     #DEX STR SIZ AGE
