@@ -1,0 +1,47 @@
+{'anonymous': None, 
+'font': 7973472, 
+'group_id': 596404376, 
+'message': [{'type': 'text', 'data': {'text': '1'}}], 
+'message_id': 877, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '1', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539737, 
+'user_id': 1150640066}
+
+
+
+
+{'anonymous': None, 
+'font': 7973504, 
+'group_id': 596404376, 
+'message': [{'type': 'image', 'data': {'file': '5BA4C548490F210DDFC3D95AE4AAF85C.jpg', 'url': 'https://gchat.qpic.cn/gchatpic_new/1150640066/596404376-2464882822-5BA4C548490F210DDFC3D95AE4AAF85C/0?vuin=1803983079&amp;term=2'}}], 
+'message_id': 878, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '[CQ:image,file=5BA4C548490F210DDFC3D95AE4AAF85C.jpg]', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539744, 
+'user_id': 1150640066}
+
+
+
+
+{'anonymous': None, 
+'font': 8124120, 
+'group_id': 596404376, 
+'message': [{'type': 'text', 'data': {'text': '2'}}, {'type': 'image', 'data': {'file': '562B9A82D8026E5BDE23CA60F3D90002.jpg', 'url': 'https://gchat.qpic.cn/gchatpic_new/1150640066/596404376-3097539832-562B9A82D8026E5BDE23CA60F3D90002/0?vuin=1803983079&amp;term=2'}}], 
+'message_id': 879, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '2[CQ:image,file=562B9A82D8026E5BDE23CA60F3D90002.jpg]', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539756, 
+'user_id': 1150640066}
