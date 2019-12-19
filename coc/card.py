@@ -2,91 +2,6 @@ import random
 import re
 import copy
 
-skill={
-    "ACCOUNTING":5,
-    "ACTING":5,
-    "ANIMAL_HANDLING":5,
-    "ANTHROPOLOGY":1,
-    "APPRAISE":5,
-    "ARCHAEOLOGY":1,
-    "ART_AND_CRAFT":5,
-    "ARTILLERY":1,
-    "ASTRONOMY":1,
-    "AXE":15,
-    "BIOLOGY":1,
-    "BOTANY":1,
-    "BOW":15,
-    "BRAWL":25,
-    "CHAINSAW":10,
-    "CHARM":15,
-    "CHEMISTRY":1,
-    "CLIMB":20,
-    "COMPUTER_USE":5,
-    "CREDIT_RATING":0,
-    "CRYPTOGRAPHY":1,
-    "CTHULHU_MYTHOS":0,
-    "DEMOLITIONS":1,
-    "DISGUISE":5,
-    "DIVING":1,
-    "DRIVE_AUTO":20,
-    "ELECTRICAL_REPAIR":10,
-    "ELECTRONICS":1,
-    "FAST_TALK":5,
-    "FINE_ART":5,
-    "FIRST_AID":30,
-    "FLAIL":10,
-    "FLAMETHROWER":10,
-    "FORENSICS":1,
-    "FORGERY":5,
-    "GARROTE":15,
-    "GEOLOGY":1,
-    "HANDGUN":20,
-    "HEAVY_WEAPONS":10,
-    "HISTORY":5,
-    "HYPNOSIS":1,
-    "INTIMIDATE":15,
-    "JUMP":20,
-    "LANGUAGE_OTHER":1,
-    "LAW":5,
-    "LIBRARY_USE":20,
-    "LISTEN":20,
-    "LOCKSMITH":1,
-    "MACHINE_GUN":10,
-    "MATHEMATICS":1,
-    "MECHANICAL_REPAIR":10,
-    "MEDICINE":1,
-    "METEOROLOGY":1,
-    "NATURAL_WORLD":10,
-    "NAVIGATE":10,
-    "OCCULT":5,
-    "OPERATE_HEAVY_MACHINERY":1,
-    "PERSUADE":10,
-    "PHARMACY":1,
-    "PHOTOGRAPHY":5,
-    "PHYSICS":1,
-    "PILOT":1,
-    "PSYCHOANALYSIS":1,
-    "PHYCHOLOGY":10,
-    "READ_LIPS":1,
-    "RIDE":5,
-    "RIFLE":25,
-    "SCIENCE":1,
-    "SHOTGUN":25,
-    "SLEIGHT_OF_HAND":10,
-    "SPEAR":20,
-    "SPOT_HIDDEN":25,
-    "STEALTH":20,
-    "SUBMACHINE_GUN":15,
-    "SURVIVAL":10,
-    "SWORD":20,
-    "SWIM":20,
-    "THROW":20,
-    "TRACK":10,
-    "WHIP":5,
-    "ZOOLOGY":1
-    }
-
-
 class investigator():
     def __init__(self):
         self.stats=copy.deepcopy(self.coc7th())
@@ -94,18 +9,57 @@ class investigator():
         self.build_and_DB()
         self.hp()
         self.mov()
+        self.san()
         #self.age_modify()
-        self.skills=copy.deepcopy(self.skill())
+        self.skills=dict()
+        self.weapon=dict()
 
     def __str__(self):
         data=str()
+        i=0
         for key, value in self.stats.items():
-            data+="{:>12} {:<9}\n".format(key,str(value))
+            data+="{:>12} {:<9}".format(key,str(value))
+            i+=1
+            if i%2==0:
+                data+='\n'
+            
         data=data+"="*20+"\n"
         for key, value in self.skills.items():
             data+="{:>24} {:<9}\n".format(key,str(value))        
+        for key, value in self.weapon.items():
+            data+="{:>24} {:<9}\n".format(key,str(value))  
         return data
-    
+
+    def add_skill(self,cmd,name,value):
+        '''
+        为调查员添加技能 \n
+        cmd:自定义指令 str \n
+        name:技能名称 str \n
+        value:技能值 int
+        '''
+        self.skills[cmd]=[name,value]
+
+    def add_weapon(self,cmd,name,value,damage):
+        '''
+        为调查员添加武器 \n
+        cmd:自定义指令 str \n
+        name:武器名称 str \n
+        value:武器检定值 int \n
+        dmage: 伤害 str
+        '''
+        self.weapon[cmd]=[name,value,damage]
+
+    def is_skill_exist(self,cmd):
+        '''
+        检查技能是否已存在 \n
+        cmd: 技能指令 \n
+        Return: 存在返回True，否则返回False
+        '''
+        if cmd in self.skills.keys():
+            return True
+        else:
+            return False
+
     def stats_add(self,index,num):
         '''
         对调查员能力值的增减及相应调整 \n
@@ -135,6 +89,8 @@ class investigator():
             self.mov()
         elif index=="AGE":
             self.mov()
+        elif index=="POW":
+            self.san()
 
     def coc7th(self):
         '''
@@ -154,18 +110,8 @@ class investigator():
         Stats['SAN']=[Stats['POW'],Stats['POW']]
         Stats['EDU']=sum(dice(['2d6','6']))*5
         Stats['LUCK']=sum(dice(['3d6']))*5
-        
         return Stats
 
-    def skill(self):
-        '''
-        生成一份均为默认值的技能字典
-        '''
-        Skill=copy.deepcopy(skill)
-        Skill["LANGUAGE_OWN"]=self.stats['EDU']
-        Skill["DODGE"]=self.stats['DEX']//2
-        return Skill
-    
     #STR SIZ
     def build_and_DB(self):
         '''
@@ -200,6 +146,15 @@ class investigator():
         num=(self.stats['CON']+self.stats['SIZ'])//10
         self.stats['HP']=[num,num] #血量值表示为包含两个int的list，格式为[当前血量,最大血量]
 
+    #POW
+    def san(self):
+        '''
+        根据POW计算SAN
+        '''
+        num=self.stats['POW']
+        self.stats['SAN']=[num,num] #理智值表示为包含两个int的list，格式为[当前理智,最大理智]
+
+
     #DEX STR SIZ AGE
     def mov(self):
         '''
@@ -218,7 +173,6 @@ class investigator():
         Age=Age-30
         if Age>0:
             self.stats['MOV']=self.stats['MOV']-Age//10
-
 
     def age_modify(self):
         '''
@@ -315,6 +269,9 @@ class investigator():
                         self.stats_add('EDU',num)
         self.stats['AGE_modify']=False
 
+    def sc(self,cmdList1,cmdList2):
+        '''
+        '''
 
 
 
