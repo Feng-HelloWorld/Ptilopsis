@@ -1,7 +1,7 @@
 import os
-from coc.card import investigator
+from card import investigator
 import re
-from coc.fileIO import *
+from fileIO import *
 
 cardPath=os.path.abspath('./coc/cards')
 cardList=os.listdir(cardPath)
@@ -15,11 +15,15 @@ for name in cardList:
 
 
 
-cardDict['1150640066.txt'].age_modify()
+#cardDict['1150640066.txt'].age_modify()
 
-print(cardDict['1150640066.txt'])
+cardDict['1150640066.txt'].creat_pic()
 
-write_card_to_file('1150640066.txt',cardDict)
+#print(cardDict['1150640066.txt'])
+
+#write_card_to_file('1150640066.txt',cardDict)
+
+
 
 def printCard():
-    return cardDict['1150640066.txt']
+    return str(cardDict['1150640066.txt'])

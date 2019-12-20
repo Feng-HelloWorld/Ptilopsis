@@ -1,6 +1,7 @@
 import random
 import re
 import copy
+import make_pic
 
 class investigator():
     def __init__(self):
@@ -35,6 +36,32 @@ class investigator():
 
     def __repr__(self):
         return self.__str__()
+
+    def creat_pic(self):
+        image, img=make_pic.init()
+        
+        make_pic.add_name_and_age(img,self.stats['NAME'],self.stats['AGE'])
+
+        stats=['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK','BUILD','DB','MOV']
+        dataList=list()
+        for item in stats:
+            dataList.append('{}: {}'.format(item,self.stats[item]))
+        for item in ['HP','SAN','MP']:
+            dataList.append('{}: {}/{}'.format(item,self.stats[item][0],self.stats[item][1]))
+        make_pic.add_stats(img,dataList)
+
+        dataList=list()
+        for key, value in self.skills.items():
+            dataList.append([key,value[0],value[1]])
+        make_pic.add_skills(img,dataList)
+
+        dataList=list()
+        for key, value in self.weapon.items():
+            dataList.append([key,value[0],value[1],value[2]])
+        make_pic.add_weapons(img,dataList)
+
+        make_pic.save(image,'12345.png')
+
 
 
     def add_stats(self,index,value):
