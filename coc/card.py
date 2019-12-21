@@ -357,6 +357,7 @@ class investigator():
             self.stats[index][0]=self.stats[index][0]+num
             if self.stats[index][0]<0:
                 self.stats[index]=0  
+        return origin, self.stats[index]
 
     def rc(self,index,cmd=0):
         '''

@@ -20,22 +20,24 @@ for name in cardList:
 def parse(cmd,ctx):
     '''
     '''
-    if re.match('^\.card$',cmd,re.I):
-        cmd_card(ctx)
-        pic='[CQ:image,file=card_out.jpg]'
-        return pic
-
-def cmd_card(ctx):
-    '''
-    输出调查员人物卡
-    '''
     QQ=ctx.get('user_id')
     fileName=str(QQ)+'.txt'
-    if fileName in cardDict.keys():
-        cardDict[fileName].creat_pic()
-    else:
+
+    if fileName not in cardDict.keys():
         new_card(ctx)
-        cardDict[fileName].creat_pic()
+    Card=cardDict[fileName]
+    if re.match('^\.card$',cmd,re.I):
+        Card.creat_pic()
+        return True
+    elif re.match('^\.HP[\+\-]\d*',cmd,re.I):
+        value=int(cmd[3:])
+        origin, now = Card.status_add('HP',value)
+        return origin, now
+    
+    
+    or re.match('^\.SAN[\+\-]\d*',cmd,re.I) or re.match('^\.MP[\+\-]\d*',cmd,re.I):
+
+
 
 def new_card(ctx):
     '''
@@ -49,12 +51,13 @@ def new_card(ctx):
         name=name[0:10]
     fileName=str(QQ)+'.txt'
     cardDict[fileName]=investigator()
+    cardDict[fileName].add_stats('NAME',name)
     write_card_to_file(fileName,cardDict)
 
 
 #cardDict['1150640066.txt'].age_modify()
 #cardDict['1150640066.txt'].creat_pic()
-cardDict['3426285834.txt'].creat_pic()
+#cardDict['3426285834.txt'].creat_pic()
 #print(cardDict['3426285834.txt'].rc('jsfs',+2))
 #print(cardDict['3426285834.txt'].rc('jsfs'))
 #print(cardDict['3426285834.txt'].rc('jsfs',-2))

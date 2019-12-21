@@ -20,7 +20,11 @@ async def handle_group_message(ctx: Context_T):
         if raw=='33445566f':
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=coc_main.printCard())
         elif re.match('^\.card$',raw,re.I):
-            msg=coc_main.parse(raw,ctx)
+            coc_main.parse(raw,ctx)
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message='[CQ:image,file=card_out.jpg]')
+        elif re.match('^\.HP[\+\-]\d*',cmd,re.I):
+            origin, now = coc_main.parse(raw,ctx)
+            msg='当前血量: {} -> {}'.format(origin,now)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
 
 
