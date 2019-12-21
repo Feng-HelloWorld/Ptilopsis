@@ -7,6 +7,8 @@ sys.path.append('./coc')
 
 import coc_main
 
+
+
 bot = nonebot.get_bot()
 
 #群消息处理
@@ -22,10 +24,23 @@ async def handle_group_message(ctx: Context_T):
         elif re.match('^\.card$',raw,re.I):
             coc_main.parse(raw,ctx)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message='[CQ:image,file=card_out.jpg]')
-        elif re.match('^\.HP[\+\-]\d*',cmd,re.I):
+        elif re.match('^\.HP[\+\-]\d*',raw,re.I):
             origin, now = coc_main.parse(raw,ctx)
-            msg='当前血量: {} -> {}'.format(origin,now)
+            msg='当前HP: {} -> {}'.format(origin,now)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
+        elif re.match('^\.SAN[\+\-]\d*',raw,re.I):
+            origin, now = coc_main.parse(raw,ctx)
+            msg='当前SAN: {} -> {}'.format(origin,now)
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
+        elif re.match('^\.MP[\+\-]\d*',raw,re.I):
+            origin, now = coc_main.parse(raw,ctx)
+            msg='当前MP: {} -> {}'.format(origin,now)
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
+        elif re.match('^\.rc[\+\-]?\d? .+$',raw,re.I):
+            result=coc_main.parse(raw,ctx)
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=result)
+
+
 
 
 def is_only_text(ctx):

@@ -17,6 +17,10 @@ for name in cardList:
         cardDict[name]=investigator()
         read_card_from_file(name,cardDict)
 
+SUCCESS=[1:'你开挂了吧',2:'极难成功',3:'困难成功',4:'普通成功',5:'差点失败',6:'差点成功',7:'蔡',8:'你人没了']
+
+
+
 def parse(cmd,ctx):
     '''
     '''
@@ -33,7 +37,35 @@ def parse(cmd,ctx):
         value=int(cmd[3:])
         origin, now = Card.status_add('HP',value)
         return origin, now
-    
+    elif re.match('^\.SAN[\+\-]\d*',cmd,re.I):
+        value=int(cmd[3:])
+        origin, now = Card.status_add('SAN',value)
+        return origin, now
+    elif re.match('^\.MP[\+\-]\d*',cmd,re.I):
+        value=int(cmd[3:])
+        origin, now = Card.status_add('MP',value)
+        return origin, now
+    elif re.match('^\.rc[\+\-]?\d? .+$',cmd,re.I):
+        temp=cmd.strip().split(' ')
+        item=temp[1]
+        add_cmd=0
+        if len(temp[0])>3:
+            add_cmd=int(temp[0][3:])
+        result = Card.rc(skill,add_cmd)
+        if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
+            item_ch=item
+        elif item in Card.skills.keys():
+            item_ch=Card.skills[item][0]
+        if len(result)<3:
+            msg='\*{}进行检定 出目[{}]\n{}'.format(Card.stats['NAME'],result[0],SUCCESS[result[1]])
+        else:
+            final=result[2]
+            i=3
+            a=' '
+            while i<len(result):
+                a=a+str(result[i])+' '
+            msg='\*{}进行检定 出目[{}]->{}->[{}]\n{}'.format(Card.stats['NAME'],result[0],a,final,SUCCESS[result[1]])
+        return msg
     
     or re.match('^\.SAN[\+\-]\d*',cmd,re.I) or re.match('^\.MP[\+\-]\d*',cmd,re.I):
 

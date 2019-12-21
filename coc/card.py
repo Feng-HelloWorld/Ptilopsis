@@ -348,7 +348,7 @@ class investigator():
         index: 状态值名称 str \n
         num: 调整数值 int
         '''
-        origin=self.stats[index]
+        origin=self.stats[index][0]
         if num>0:
             self.stats[index][0]=self.stats[index][0]+num
             if self.stats[index][0]>self.stats[index][1]:
@@ -357,7 +357,7 @@ class investigator():
             self.stats[index][0]=self.stats[index][0]+num
             if self.stats[index][0]<0:
                 self.stats[index]=0  
-        return origin, self.stats[index]
+        return origin, self.stats[index][0]
 
     def rc(self,index,cmd=0):
         '''
