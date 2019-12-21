@@ -17,7 +17,7 @@ for name in cardList:
         cardDict[name]=investigator()
         read_card_from_file(name,cardDict)
 
-SUCCESS=[1:'你开挂了吧',2:'极难成功',3:'困难成功',4:'普通成功',5:'差点失败',6:'差点成功',7:'蔡',8:'你人没了']
+SUCCESS={1:'你开挂了吧',2:'极难成功',3:'困难成功',4:'普通成功',5:'差点失败',6:'差点成功',7:'蔡',8:'你人没了'}
 
 
 

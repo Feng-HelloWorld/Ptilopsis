@@ -366,9 +366,15 @@ class investigator():
         add=list()
         if cmd!=0:
             add=add_dice(roll,cmd)
-            level=ra_rc(self.skills[index][1],add[0])
+            if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
+                level=ra_rc(self.stats[index],add[0])
+            else:
+                level=ra_rc(self.skills[index][1],add[0])
         else:
-            level=ra_rc(self.skills[index][1],roll) 
+            if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
+                level=ra_rc(self.stats[index],roll)
+            else:
+                level=ra_rc(self.skills[index][1],roll) 
         return [roll,level]+add
 
 def ra_rc(stander,value):
