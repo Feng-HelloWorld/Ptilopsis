@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 ttf_path='pf-bz.ttf'
-img_path='6.png'
+img_path='blank.png'
 
 def init():
     image = Image.open(img_path)
@@ -47,7 +47,7 @@ def add_skills(img_draw,dataList):
 
 def add_weapons(img_draw,dataList):
     left=120
-    top_edge=1520
+    top_edge=1500
     ttf = ImageFont.truetype(ttf_path, 35)
     num=0
     for m in range(4):

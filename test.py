@@ -35,7 +35,7 @@ print("Finall success:",sum(success)/50,"%")
 '''
 
 
-a=coc.card.investigator()
+#a=coc.card.investigator()
 for i in range(1):
     #print(a)
     pass
@@ -54,11 +54,12 @@ print(s.isdigit())
 a=print('sdf')
 print(a)
 
+d=[12,5]
+c=[5,67,6]+d
+print(c)
 
 
-
-
-
+'''
 
 img_path = "6.png"
 ttf_path = "pf-bz.ttf"
@@ -257,3 +258,4 @@ img_draw.text((chars_x, chars_y), chars, font=ttf, fill=(160,160,160))
 
 # image.show()
 image.save("1234.png")
+'''

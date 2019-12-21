@@ -62,8 +62,6 @@ class investigator():
 
         make_pic.save(image,'12345.png')
 
-
-
     def add_stats(self,index,value):
         '''
         修改调查员能力值及相应调整 \n
@@ -334,8 +332,92 @@ class investigator():
     def sc(self,cmdList1,cmdList2):
         '''
         '''
+        roll=dice()
+        success = roll<=self.stats['POW']
+        if success:
+            value=sum(dice(cmdList1))*-1
+            self.status_add('SAN',value)
+        else:
+            value=sum(dice(cmdList2))*-1
+            self.status_add('SAN',value)
+
+    def status_add(self,index,num):
+        '''
+        对调查员状态值的增减及相应调整 \n
+        index: 状态值名称 str \n
+        num: 调整数值 int
+        '''
+        origin=self.stats[index]
+        if num>0:
+            self.stats[index][0]=self.stats[index][0]+num
+            if self.stats[index][0]>self.stats[index][1]:
+                self.stats[index]=self.stats[index][1]
+        elif num<0:
+            self.stats[index][0]=self.stats[index][0]+num
+            if self.stats[index][0]<0:
+                self.stats[index]=0  
+
+    def rc(self,index,cmd=0):
+        '''
+        '''
+        roll=sum(dice())
+        add=list()
+        if cmd!=0:
+            add=add_dice(roll,cmd)
+            level=ra_rc(self.skills[index][1],add[0])
+        else:
+            level=ra_rc(self.skills[index][1],roll) 
+        return [roll,level]+add
+
+def ra_rc(stander,value):
+    '''
+    '''
+    opppps=99
+    if stander<50:
+        opppps=95
+    # 1     2        3      4      5        6      7       8
+    #大成功 极难成功 困难成功 普通成功 压线成功 压线失败 普通失败 大失败
+    if value==1:
+        return 1
+    elif value<=stander//5:
+        return 2
+    elif value<=stander//2:
+        return 3
+    elif value<stander:
+        return 4
+    elif value==stander:
+        return 5
+    elif value==stander+1:
+        return 6
+    elif value>opppps:
+        return 8
+    else:
+        return 7
+    
 
 
+def add_dice(value,cmd):
+    '''
+    '''
+    if cmd>0:
+        add=dice([str(cmd)+'d10'])
+        for i in range(len(add)):
+            add[i]=add[i]-1
+            temp=add[i]*10+value%10
+            if temp<value:
+                value=temp
+                if value<1:
+                    value=1
+    elif cmd<0:
+        add=dice([str(cmd*-1)+'d10'])
+        for i in range(len(add)):
+            temp=add[i]*10+value%10
+            if temp>value:
+                value=temp
+                if value>100:
+                    value=100
+    return [value]+add
+            
 
 def dice(cmdList=['d100']):
     '''
@@ -392,26 +474,5 @@ def minus(dataList,negative,value):
         dataList.append(value)
 
 
-"""
-def build_and_DB(value):
-    '''
-    计算体格和伤害加深 \n
-    value: STR+SIZ int \n
-    Return: 体格 int, 伤害加深 cmdList
-    '''
-    
-    if value<65:
-        return -2, '-2'
-    elif value<85:
-        return -1, '-1'
-    elif value<125:
-        return 0, '0'
-    elif value<165:
-        return 1, '1d4'
-    elif value<205:
-        return 2, '1d6'
-    else:
-        num=(value-205)//80
-        return [3+num, str(2+num)+"d6"]
-"""  
+
 
