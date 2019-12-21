@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+import os
 
 ttf_path='pf-bz.ttf'
 img_path='blank.png'
@@ -65,4 +66,5 @@ def add_weapons(img_draw,dataList):
 
 def save(image,fileName):
     image.save(fileName)
+    os.rename('card_out.png','card_out.jpg')
     

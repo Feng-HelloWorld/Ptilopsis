@@ -60,7 +60,7 @@ class investigator():
             dataList.append([key,value[0],value[1],value[2]])
         make_pic.add_weapons(img,dataList)
 
-        make_pic.save(image,'out.png')
+        make_pic.save(image,'../data/image/card_out.png')
 
     def add_stats(self,index,value):
         '''

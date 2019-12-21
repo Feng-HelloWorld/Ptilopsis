@@ -22,10 +22,8 @@ def parse(cmd,ctx):
     '''
     if re.match('^\.card$',cmd,re.I):
         cmd_card(ctx)
-        pic='[CQ:image,file=out.png]'
+        pic='[CQ:image,file=card_out.jpg]'
         return pic
-
-
 
 def cmd_card(ctx):
     '''
@@ -56,10 +54,10 @@ def new_card(ctx):
 
 #cardDict['1150640066.txt'].age_modify()
 #cardDict['1150640066.txt'].creat_pic()
-#cardDict['3426285834.txt'].creat_pic()
-print(cardDict['3426285834.txt'].rc('jsfs',+2))
-print(cardDict['3426285834.txt'].rc('jsfs'))
-print(cardDict['3426285834.txt'].rc('jsfs',-2))
+cardDict['3426285834.txt'].creat_pic()
+#print(cardDict['3426285834.txt'].rc('jsfs',+2))
+#print(cardDict['3426285834.txt'].rc('jsfs'))
+#print(cardDict['3426285834.txt'].rc('jsfs',-2))
 #print(card.dice(['2d10']))
 #print(cardDict['1150640066.txt'])
 
