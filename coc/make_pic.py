@@ -66,5 +66,8 @@ def add_weapons(img_draw,dataList):
 
 def save(image,fileName):
     image.save(fileName)
-    os.rename('card_out.png','card_out.jpg')
+    try:
+        os.remove('../data/image/card_out.jpg')
+    except:pass
+    os.rename('../data/image/card_out.png','../data/image/card_out.jpg')
     

@@ -1,5 +1,5 @@
 ==Stats属性====================
-NAME:Lappland
+NAME:拉普兰德
 AGE:27
 STR:70
 CON:70
