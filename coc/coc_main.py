@@ -1,3 +1,6 @@
+import sys
+sys.path.append('./coc')
+
 import os
 from card import investigator
 import re
@@ -42,7 +45,7 @@ def new_card(ctx):
     '''
     QQ=ctx.get('user_id')
     name=ctx.get('sender')['card']
-    if name='':
+    if name=='':
         name=ctx.get('sender')['nickname']
     if len(name)>10:
         name=name[0:10]

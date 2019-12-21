@@ -1,4 +1,8 @@
-import coc.card
+import sys
+sys.path.append('./coc')
+
+
+import card
 import time
 import os
 

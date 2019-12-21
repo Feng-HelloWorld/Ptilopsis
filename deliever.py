@@ -2,7 +2,10 @@ import nonebot
 import re
 from nonebot.typing import Context_T
 
-import coc.coc_main
+import sys
+sys.path.append('./coc')
+
+import coc_main
 
 bot = nonebot.get_bot()
 
@@ -15,9 +18,9 @@ async def handle_group_message(ctx: Context_T):
         raw=ctx.get('raw_message')
         print(raw)
         if raw=='33445566f':
-            await bot.send_group_msg(group_id=ctx.get('group_id'),message=coc.coc_main.printCard())
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=coc_main.printCard())
         elif re.match('^\.card$',raw,re.I):
-            msg=coc.coc_main.parse(raw,ctx)
+            msg=coc_main.parse(raw,ctx)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
 
 
