@@ -44,10 +44,6 @@ def read_card_from_file(fileName,cardDict):
     Card.build_and_DB()
     Card.mov()
 
-
-
-
-
 def write_card_to_file(fileName,cardDict):
     '''
     将内存中的人物卡写入文件中 \n

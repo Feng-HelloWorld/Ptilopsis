@@ -12,11 +12,13 @@ async def handle_group_message(ctx: Context_T):
     
     #如果消息为纯文本
     if is_only_text(ctx):
-        msg=ctx.get('raw_message')
-        print(msg)
-        if msg=='33445566f':
+        raw=ctx.get('raw_message')
+        print(raw)
+        if raw=='33445566f':
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=coc.coc_main.printCard())
-        
+        elif re.match('^\.card$',raw,re.I):
+            msg=coc.coc_main.parse(raw,ctx)
+            await bot.send_group_msg(group_id=ctx.get('group_id'),message=msg)
 
 
 def is_only_text(ctx):

@@ -60,7 +60,7 @@ class investigator():
             dataList.append([key,value[0],value[1],value[2]])
         make_pic.add_weapons(img,dataList)
 
-        make_pic.save(image,'12345.png')
+        make_pic.save(image,'out.png')
 
     def add_stats(self,index,value):
         '''
@@ -340,6 +340,7 @@ class investigator():
         else:
             value=sum(dice(cmdList2))*-1
             self.status_add('SAN',value)
+        return roll, success, value
 
     def status_add(self,index,num):
         '''
@@ -394,8 +395,6 @@ def ra_rc(stander,value):
     else:
         return 7
     
-
-
 def add_dice(value,cmd):
     '''
     '''
@@ -418,7 +417,6 @@ def add_dice(value,cmd):
                     value=100
     return [value]+add
             
-
 def dice(cmdList=['d100']):
     '''
     根据指令列表进行投掷检定 \n
