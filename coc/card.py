@@ -352,11 +352,11 @@ class investigator():
         if num>0:
             self.stats[index][0]=self.stats[index][0]+num
             if self.stats[index][0]>self.stats[index][1]:
-                self.stats[index]=self.stats[index][1]
+                self.stats[index][0]=self.stats[index][1]
         elif num<0:
             self.stats[index][0]=self.stats[index][0]+num
             if self.stats[index][0]<0:
-                self.stats[index]=0  
+                self.stats[index][0]=0  
         return origin, self.stats[index][0]
 
     def rc(self,index,cmd=0):

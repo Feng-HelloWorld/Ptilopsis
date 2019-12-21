@@ -38,7 +38,7 @@ def parse(cmd,ctx):
         origin, now = Card.status_add('HP',value)
         return origin, now
     elif re.match('^\.SAN[\+\-]\d*',cmd,re.I):
-        value=int(cmd[3:])
+        value=int(cmd[4:])
         origin, now = Card.status_add('SAN',value)
         return origin, now
     elif re.match('^\.MP[\+\-]\d*',cmd,re.I):
@@ -51,7 +51,7 @@ def parse(cmd,ctx):
         add_cmd=0
         if len(temp[0])>3:
             add_cmd=int(temp[0][3:])
-        result = Card.rc(skill,add_cmd)
+        result = Card.rc(item,add_cmd)
         if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
             item_ch=item
         elif item in Card.skills.keys():
@@ -67,7 +67,6 @@ def parse(cmd,ctx):
             msg='\*{}进行检定 出目[{}]->{}->[{}]\n{}'.format(Card.stats['NAME'],result[0],a,final,SUCCESS[result[1]])
         return msg
     
-    or re.match('^\.SAN[\+\-]\d*',cmd,re.I) or re.match('^\.MP[\+\-]\d*',cmd,re.I):
 
 
 
