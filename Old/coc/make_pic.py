@@ -30,7 +30,6 @@ def add_stats(img_draw,dataList):
             num+=1
 
 def add_skills(img_draw,dataList):
-    left=120
     top_edge=890
     ttf = ImageFont.truetype(ttf_path, 35)
     num=0
@@ -47,7 +46,6 @@ def add_skills(img_draw,dataList):
         num+=1
 
 def add_weapons(img_draw,dataList):
-    left=120
     top_edge=1500
     ttf = ImageFont.truetype(ttf_path, 35)
     num=0

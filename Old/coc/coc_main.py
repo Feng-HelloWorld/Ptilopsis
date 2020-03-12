@@ -63,6 +63,7 @@ def parse(cmd,ctx):
             i=3
             a=' '
             while i<len(result):
+                i+=1
                 a=a+str(result[i])+' '
             msg='\*{}进行检定 出目[{}]->{}->[{}]\n{}'.format(Card.stats['NAME'],result[0],a,final,SUCCESS[result[1]])
         return msg

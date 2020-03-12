@@ -366,12 +366,12 @@ class investigator():
         add=list()
         if cmd!=0:
             add=add_dice(roll,cmd)
-            if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
+            if index in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
                 level=ra_rc(self.stats[index],add[0])
             else:
                 level=ra_rc(self.skills[index][1],add[0])
         else:
-            if item in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
+            if index in ['STR','CON','SIZ','DEX','APP','INT','POW','EDU','LUCK']:
                 level=ra_rc(self.stats[index],roll)
             else:
                 level=ra_rc(self.skills[index][1],roll) 
