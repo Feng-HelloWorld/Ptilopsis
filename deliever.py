@@ -7,8 +7,6 @@ sys.path.append('./coc')
 
 import coc_main
 
-
-
 bot = nonebot.get_bot()
 
 #群消息处理
@@ -39,8 +37,6 @@ async def handle_group_message(ctx: Context_T):
         elif re.match('^\.rc[\+\-]?\d? .+$',raw,re.I):
             result=coc_main.parse(raw,ctx)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=result)
-
-
 
 
 def is_only_text(ctx):
