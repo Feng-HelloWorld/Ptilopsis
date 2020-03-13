@@ -12,7 +12,8 @@ bot = nonebot.get_bot()
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx: Context_T):
-    
+    public_reply=[]
+    private_reply=[]
     #如果消息为纯文本
     if is_only_text(ctx):
         raw=ctx.get('raw_message')
@@ -38,6 +39,24 @@ async def handle_group_message(ctx: Context_T):
             result=coc_main.parse(raw,ctx)
             await bot.send_group_msg(group_id=ctx.get('group_id'),message=result)
 
+def send_msg(pub, pri, ctx):
+    """
+    发送消息 \n
+    pub: 要发送到群里的列表，每个元素之间增加空格\n
+    pri: 要发送给私人的列表，每个元素之间增加空格\n
+    ctx: 用于查询群号和用户QQ\n
+    Return: 无
+    """
+    if len(pub)>0:
+        reply=""
+        for item in pub:
+            reply = reply+item+'\n'
+        await bot.send_group_msg(group_id=ctx.get('group_id'),message=reply)
+    if len(pri)>0:
+        reply=""
+        for item in pri:
+            reply = reply+item+'\n'
+        #await bot.send_private_msg(group_id=ctx.get('group_id'),message=msg)
 
 def is_only_text(ctx):
     '''

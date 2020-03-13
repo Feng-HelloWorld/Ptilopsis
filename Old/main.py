@@ -13,5 +13,5 @@ if __name__ == '__main__':
     #nonebot.load_plugins(path.join(path.dirname(__file__), 'coc'),'coc')
     
     #启用指令解析插件
-    nonebot.load_plugin('deliver')
+    nonebot.load_plugin('deliever')
     nonebot.run()

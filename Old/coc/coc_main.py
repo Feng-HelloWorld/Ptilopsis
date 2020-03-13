@@ -100,5 +100,6 @@ def new_card(ctx):
 
 
 
-def printCard():
+de
+f printCard():
     return str(cardDict['1150640066.txt'])
