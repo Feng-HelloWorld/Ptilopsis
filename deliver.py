@@ -4,6 +4,7 @@ from nonebot.typing import Context_T
 import sys
 sys.path.append('./coc')
 from coc.rd import rd
+from jrrp import jrrp
 
 
 bot = nonebot.get_bot()
@@ -26,6 +27,9 @@ async def handle_group_message(ctx: Context_T):
         #rd指令
         elif re.match('^\.r\d*d\d*.*$',txt,re.I):
             rd(txt,ctx,msg)
+        #jrrp指令
+        elif txt==".jrrp":
+            jrrp(ctx,msg)
 
         #发送消息
         await send_msg(msg,ctx)

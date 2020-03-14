@@ -1,7 +1,11 @@
 import re
-from coc.rd import rd
+
+import time
 import sys
 sys.path.append('./coc')
+from coc.rd import rd
+from jrrp import jrrp
+
 
 #群消息处理
 
@@ -24,6 +28,8 @@ def handle_group_message(ctx):
         #rd指令
         elif re.match('^\.r\d*d\d*.*$',txt,re.I):
             rd(txt,ctx,msg)
+        elif txt==".jrrp":
+            jrrp(ctx,msg)
 
         #发送消息
         test_msg(msg,ctx)
@@ -71,8 +77,8 @@ def is_only_text(ctx):
     return False
 
 
-txt='.r30dd5'
-user=1150640066
+txt='.jrrp'
+user=1150640067
 
 
 ctx={'anonymous': None, 
@@ -90,3 +96,4 @@ ctx={'anonymous': None,
 'user_id': user}
 
 handle_group_message(ctx)
+print(time.time())
