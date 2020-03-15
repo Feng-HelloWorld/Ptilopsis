@@ -4,7 +4,7 @@ from nonebot.typing import Context_T
 import sys
 sys.path.append('./coc')
 from coc.rd import rd
-from jrrp import jrrp
+from jrrp import jrrp, first_jrrp
 
 
 bot = nonebot.get_bot()
@@ -20,6 +20,9 @@ async def handle_group_message(ctx: Context_T):
     if is_only_text(ctx):
         #消息文本
         txt = ctx['raw_message']
+
+
+
         if txt=='wwssaaddabab':
             msg[0].append('输出测试')
             msg[0].append('copyright@2020 Ptilposis')
@@ -30,6 +33,9 @@ async def handle_group_message(ctx: Context_T):
         #jrrp指令
         elif txt==".jrrp":
             jrrp(ctx,msg)
+        else:
+            #每日首次发非指令消息时自动执行jrrp
+            first_jrrp(ctx,msg)
 
         #发送消息
         await send_msg(msg,ctx)

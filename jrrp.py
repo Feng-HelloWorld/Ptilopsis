@@ -58,3 +58,21 @@ def __getName(ctx):
     name = ctx['sender']['nickname']
     if nick=='': return name
     else: return nick
+
+def first_jrrp(ctx,msg:tuple):
+    """
+    每日首次发言自动jrrp\n
+    ctx\n
+    msg\n
+    Return: 无
+    """
+    #获取信息
+    QQ=str(ctx['user_id'])
+    name=__getName(ctx)
+    #重新加载日期，若过期则清空数组，然后直接计算当前用户的新运势
+    global t
+    new_t = int((int(time.time())-1584129600)/86400)
+    if new_t > t:
+        jrrp(ctx,msg)
+    elif QQ not in jr.keys():
+        jrrp(ctx,msg) 
