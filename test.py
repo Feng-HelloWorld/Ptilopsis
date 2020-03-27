@@ -4,8 +4,7 @@ import time
 import sys
 sys.path.append('./coc')
 from coc.rd import rd
-from jrrp import jrrp
-
+from jrrp import jrrp, first_jrrp, rollJrrp
 
 #群消息处理
 
@@ -96,4 +95,10 @@ ctx={'anonymous': None,
 'user_id': user}
 
 handle_group_message(ctx)
+
+sum1 = 0
+for i in range(20):
+    #print(i,"-------",rollJrrp())
+    sum1 += rollJrrp()
+print(sum1/20)
 print(time.time())

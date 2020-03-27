@@ -24,7 +24,7 @@ def rd(raw:str,ctx,msg:tuple):
         msg[0].append("- 出目："+str(result[0]))
     except Exception:
         msg[0].append("你说这些谁懂啊？")
-        #msg[0].append('[CQ:image,file=exc.jpg]')
+        msg[0].append('[CQ:image,file=exc.jpg]')
         print("**WARN：指令错误！")
 
 def __getName(ctx):

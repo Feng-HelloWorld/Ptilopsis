@@ -9,6 +9,16 @@ import coc_main
 
 bot = nonebot.get_bot()
 
+#私聊消息处理
+@bot.on_message('private') 
+async def handle_private_message(ctx: Context_T):
+    print("start","="*30)
+    print(ctx)
+    print("end","="*30)
+
+
+
+
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx: Context_T):
