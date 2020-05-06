@@ -6,6 +6,16 @@ sys.path.append('./coc')
 from coc.rd import rd
 from jrrp import jrrp, first_jrrp, rollJrrp
 
+
+
+def ban(ctx):
+    QQ = ctx["user_id"]
+    ban_list = [407670050]
+    if QQ in ban_list:
+        return False
+    else:
+        return True
+
 #群消息处理
 
 def handle_group_message(ctx):
@@ -15,7 +25,7 @@ def handle_group_message(ctx):
     msg=(pub,pri)
     print('START')
     #如果消息为纯文本
-    if is_only_text(ctx):
+    if is_only_text(ctx) and ban(ctx):
         #消息文本
         txt = ctx['raw_message']
         print('raw text: ',txt)
@@ -77,7 +87,7 @@ def is_only_text(ctx):
 
 
 txt='.jrrp'
-user=1150640067
+user=407670050
 
 
 ctx={'anonymous': None, 
@@ -95,7 +105,7 @@ ctx={'anonymous': None,
 'user_id': user}
 
 handle_group_message(ctx)
-
+print("?????????",ban(ctx))
 sum1 = 0
 for i in range(20):
     #print(i,"-------",rollJrrp())

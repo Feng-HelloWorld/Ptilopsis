@@ -1,0 +1,123 @@
+{'anonymous': None, 
+'font': 7973472, 
+'group_id': 596404376, 
+'message': [{'type': 'text', 'data': {'text': '1'}}], 
+'message_id': 877, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '1', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539737, 
+'user_id': 1150640066}
+
+
+
+
+{'anonymous': None, 
+'font': 7973504, 
+'group_id': 596404376, 
+'message': [{'type': 'image', 'data': {'file': '5BA4C548490F210DDFC3D95AE4AAF85C.jpg', 'url': 'https://gchat.qpic.cn/gchatpic_new/1150640066/596404376-2464882822-5BA4C548490F210DDFC3D95AE4AAF85C/0?vuin=1803983079&amp;term=2'}}], 
+'message_id': 878, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '[CQ:image,file=5BA4C548490F210DDFC3D95AE4AAF85C.jpg]', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539744, 
+'user_id': 1150640066}
+
+
+
+
+{'anonymous': None, 
+'font': 8124120, 
+'group_id': 596404376, 
+'message': [{'type': 'text', 'data': {'text': '2'}}, {'type': 'image', 'data': {'file': '562B9A82D8026E5BDE23CA60F3D90002.jpg', 'url': 'https://gchat.qpic.cn/gchatpic_new/1150640066/596404376-3097539832-562B9A82D8026E5BDE23CA60F3D90002/0?vuin=1803983079&amp;term=2'}}], 
+'message_id': 879, 
+'message_type': 'group', 
+'post_type': 'message', 
+'raw_message': '2[CQ:image,file=562B9A82D8026E5BDE23CA60F3D90002.jpg]', 
+'self_id': 1803983079, 
+'sender': {'age': 0, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '萌新', 'role': 'admin', 'sex': 'unknown', 'title': '', 'user_id': 1150640066}, 
+'sub_type': 'normal', 
+'time': 1576539756, 
+'user_id': 1150640066}
+
+
+
+INFO: Self: 1803983079, Message 7322 from 3426285834@[群:113847626]: '[CQ:rich,content={"detail_1":{"icon":"i.gtimg.cn/open/app_icon/00/95/17/76//100951776_100_m.png"&amp;#44;"scene":1036&amp;#44;"shareTemplateData":{}&amp;#44;"url":"m.q.qq.com/a/s/2ebed43797c154cd903135e0725c49df"&amp;#44;"preview":"pubminishare-30161.picsz.qpic.cn/3f08574a-8062-45be-a1a8-77dfff8f724a"&amp;#44;"title":"哔哩哔哩"&amp;#44;"host":{"nick":"珈百璃"&amp;#44;"uin":1051835124}&amp;#44;"shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&amp;#44;"appid":"1109937557"&amp;#44;"desc":"【梅普露】大笑江湖"}},title=&amp;#91;QQ小程序&amp;#93;哔哩哔哩]'
+
+
+INFO: Self: 1803983079, Message 7333 from 3426285834@[群:113847626]: 
+'[CQ:rich,
+content={"detail_1":{"appid":"1109937557"&amp;#44;"desc":"【沁音乐】secret base 〜君がくれたもの〜"&amp;#44;
+"host":{"nick":"白糖"&amp;#44;"uin":3426285834}&amp;#44;"icon":"miniapp.gtimg.cn/public/appicon/432b76be3a548fc128acaa6c1ec90131_200.jpg"&amp;#44;
+
+"preview":"external-30160.picsz.qpic.cn/6ebc967bf8205e6763874732994c170a/jpg1"&amp;#44;
+"qqdocurl":"https://www.bilibili.com/video/BV1mE411Q7ob/?p=1"&amp;#44;
+"scene":1036&amp;#44;"shareTemplateData":{}&amp;#44;"shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&amp;#44;"title":"哔哩哔哩"&amp;#44;"url":"m.q.qq.com/a/s/44850700b046ba0c83cea3e972d9ec0a"}},title=&amp;#91;QQ小程序&amp;#93;哔哩哔哩]'
+
+
+
+INFO: Self: 1803983079, Message 7344 from 1051835124@[群:113847626]: 
+'[CQ:rich,
+content={"detail_1":{"appid":"1109937557"&amp;#44;"desc":"《绝味之路》看点15 超级有嚼劲的炒面配可乐"&amp;#44;"host":{"nick":"珈百璃"&amp;#44;"uin":1051835124}&amp;#44;"icon":"miniapp.gtimg.cn/public/appicon/432b76be3a548fc128acaa6c1ec90131_200.jpg"&amp;#44;
+
+"preview":"pubminishare-30161.picsz.qpic.cn/05c178da-8e82-4cf2-966c-de5a504c59e5"&amp;#44;
+"scene":1036&amp;#44;"shareTemplateData":{}&amp;#44;"shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&amp;#44;"title":"哔哩哔哩"&amp;#44;"url":"m.q.qq.com/a/s/302ddbd87cb45e98fc9a6e21a79a3ff9"}},title=&amp;#91;QQ小程序&amp;#93;哔哩哔哩]'
+
+
+NFO: Self: 1803983079, Message 7380 from 2935887687@[群:792024525]: '[CQ:rich,content={"detail_1":{"appid":"1109937557"&amp;#44;"desc":"《东京大饭店》第1集 "&amp;#44;"host":{"nick":"Shiny Smily Story"&amp;#44;"uin":2935887687}&amp;#44;"icon":"i.gtimg.cn/open/app_icon/00/95/17/76//100951776_100_m.png"&amp;#44;
+"preview":"pubminishare-30161.picsz.qpic.cn/7b733b10-9e61-45aa-8193-68941b2e5584"&amp;#44;"scene":1036&amp;#44;"shareTemplateData":{}&amp;#44;"shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&amp;#44;"title":"哔哩哔哩"&amp;#44;"url":"m.q.qq.com/a/s/8569e5b3b694e523beb880fa619b0a9c"}},title=&amp;#91;QQ小程序&amp;#93;哔哩哔哩]'
+
+<li class="v-switcher-header-anchor"></li></ul></div></div><div style="display:none;"></div><!----></div></div></div><div class="body-contain"><div id="all-list"><div class="flow-loader"><!----><div class="filter-wrap"><ul class="filter-type clearfix" style="display:none;"></ul><ul class="filter-type clearfix" style="display:none;"><!----><!----></ul><a class="fold up" style="display:none;"><span>收起</span><i class="arrow-up"></i></a><a class="fold down" style="display:none;"><span>更多筛选</span><i class="arrow-down"></i></a><div class="load-state"><span class="loading">正在加载...</span></div></div><div class="mixin-list"><!----><!----><!----><!----><!----><!----><!----><!----><ul type="video" class="video-list clearfix"><li class="video-item matrix"><a href="//www.bilibili.com/video/BV1mE411Q7ob?from=search" title="【沁音乐】secret base 〜君がくれたもの〜" target="_blank" class="img-anchor"><div class="img"><div class="lazy-img"><img alt="" src=""></div><span class="so-imgTag_rb">03:59</span><div class="watch-later-trigger watch-later"></div><span class="mask-video"></span></div><!----></a><div class="info"><div class="headline clearfix"><!----><!----><span class="type hide">翻唱</span><a title="【沁音乐】secret base 〜君がくれたもの〜" href="//www.bilibili.com/video/BV1mE411Q7ob?from=search" target="_blank" class="title">【<em class="keyword">沁音乐</em>】<em class="keyword">secret</em> <em class="keyword">base</em> 〜君がくれたもの〜</a></div><div class="des hide">
+      hololive-gamers所属，住在都市中某面包店里的虚拟狗狗，戌神沁音哒！
+帮我点个素质三连好吗(˶ᵔᵕᵔ˶)♡
+------------------------------------------------------------...
+    </div><div class="tags"><span title="观看" class="so-icon watch-num"><i class="icon-playtime"></i>
+        2.0万
+      </span><span title="弹幕" class="so-icon hide"><i class="icon-subtitle"></i>
+        99
+      </span><span title="上传时间" class="so-icon time"><i class="icon-date"></i>
+        2019-10-07
+      </span><span title="up主" class="so-icon"><i class="icon-uper"></i><a href="//space.bilibili.com/412135619?from=search" target="_blank" class="up-name">戌神沁音Official</a></span></div></div></li>
+
+
+
+      \
+
+
+
+       <Event, {'anonymous': None, 'font': 10064968, 'group_id': 596404376, 
+       
+       'message': 
+        [
+            {'type': 'rich', 'data': 
+                {'content': 
+                    '{"detail_1":{
+                        "icon":"miniapp.gtimg.cn/public/appicon/432b76be3a548fc128acaa6c1ec90131_200.jpg"&#44;
+                        "qqdocurl":"https://www.bilibili.com/video/BV1mE411Q7ob/?p=1"&#44;
+                        "scene":1036&#44;
+                        "shareTemplateData":{}&#44;
+                        "preview":"external-30160.picsz.qpic.cn/6ebc967bf8205e6763874732994c170a/jpg1"&#44;
+                        "title":"哔哩哔哩"&#44;
+                        "url":"m.q.qq.com/a/s/44850700b046ba0c83cea3e972d9ec0a"&#44;
+                        "host":
+                            {"nick":"白糖"&#44;
+                            "uin":3426285834}&#44;
+                        "shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&#44;
+                        "appid":"1109937557"&#44;
+                        "desc":"【沁音乐】secret base 〜君がくれたもの〜"}
+                    }', 
+                'title': '&#91;QQ小程序&#93;哔哩哔哩'}
+            }
+        ], 
+        'message_id': 7397, 
+        'message_type': 'group', 
+        'post_type': 'message', 
+        'raw_message': 
+            '[CQ:rich,title=&#91;QQ小程序&#93;哔哩哔哩,content={"detail_1":{"icon":"miniapp.gtimg.cn/public/appicon/432b76be3a548fc128acaa6c1ec90131_200.jpg"&#44;"qqdocurl":"https://www.bilibili.com/video/BV1mE411Q7ob/?p=1"&#44;"scene":1036&#44;"shareTemplateData":{}&#44;"preview":"external-30160.picsz.qpic.cn/6ebc967bf8205e6763874732994c170a/jpg1"&#44;"title":"哔哩哔哩"&#44;"url":"m.q.qq.com/a/s/44850700b046ba0c83cea3e972d9ec0a"&#44;"host":{"nick":"白糖"&#44;"uin":3426285834}&#44;"shareTemplateId":"8C8E89B49BE609866298ADDFF2DBABA4"&#44;"appid":"1109937557"&#44;"desc":"【沁音乐】secret base 〜君がくれたもの〜"}}]', 
+        'self_id': 1803983079, 'sender': {'age': 18, 'area': '', 'card': '', 'level': '冒泡', 'nickname': '白糖', 'role': 'owner', 'sex': 'unknown', 'title': '', 'user_id': 3426285834}, 'sub_type': 'normal', 'time': 1585335181, 'user_id': 3426285834}> 
