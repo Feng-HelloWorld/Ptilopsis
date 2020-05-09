@@ -117,7 +117,7 @@ class LogBoard:
         fp = open("./pcr/pcr_team_log.txt","a",encoding="utf-8")
         t = time.gmtime(log.time-3600*5)
         if log.log_type[1]==0:
-            string = "[修正0] {:<10s} [{:<12d}] 在{:0>2d}:{:0>2d}[{}]将第{}周目Boss[{}]剩余血量设置为[{:>9d}]\n".format(log.name, log.id, t[3], t[4], log.time,log.term, log.boss, log.fix)
+            string = "[修正0] {:<10s} [{:<12d}] 在{:0>2d}:{:0>2d}[{}]将第{}周目Boss[{}]剩余血量设置为[{:>9d}]\n".format(log.name[0:10], log.id, t[3], t[4], log.time,log.term, log.boss, log.fix)
             fp.write( string )
             print(string)
             self.hp_left = log.fix
@@ -154,6 +154,8 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
                     reply.add_group_msg("* {}已将第{}周目Boss{}剩余血量修正为{:,}".format(log.name, log.term, log.boss, log.fix) )
                 else:
                     reply.add_group_msg("* ERRO：需要管理员权限")
+            elif log.log_type[1]>3:
+                reply.add_group_msg("* ERRO: 今日已出满三刀\n- 如有错误请联系管理员")
             else:
                 log_board.add(log)
                 reply.add_group_msg("* {}的今日第{}刀 {}\n- 对第{}周目Boss{}造成{:,}点伤害，boss剩余血量{:,}".format(log.name, log.log_type[1], log.log_type[0], log.term, log.boss, log.damage, log.hp_left) )

@@ -3,6 +3,7 @@ import re
 from nonebot.typing import Context_T
 import time
 from random import choice
+import json
 
 import sys
 sys.path.append('./coc')
@@ -10,6 +11,18 @@ sys.path.append('./pcr')
 from reply import Reply
 from pcr_team import loadSettings, addLog, checkStatus
 from webGet import bvSearch, biliSearch
+from jrrp import jrrp, first_jrrp
+from voice import sing, sleep
+
+cfg = dict()
+
+def loadSettings():
+    fp = open('./deliver.json', 'r',encoding="utf-8") 
+    global cfg
+    cfg = json.load(fp)
+
+loadSettings()
+
 
 
 bot = nonebot.get_bot()
@@ -51,9 +64,21 @@ async def handle_group_message(ctx: Context_T):
         elif re.match("^状态$",text):
             checkStatus(msg)
             await msg.send()
+        elif re.match("^\.jrrp$",text,re.I):
+            jrrp(msg)
+            await msg.send()
+        elif re.match("^\.sleep$",text,re.I):
+            sleep(msg)
+            await msg.send()
         else:
+            #混沌语音
+            sing(text,msg)
             #检测bv号
-            bvSearch(txt)
+            bvSearch(text,msg)
+            #每日首次发非指令消息时自动执行jrrp
+            if msg.group_id() in cfg["first_jrrp_on"]:
+                first_jrrp(msg)
+            await msg.send()
 
     #如果是bilibili小程序分享
     elif(is_bili_share(ctx)):

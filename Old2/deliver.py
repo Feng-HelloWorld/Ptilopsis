@@ -138,9 +138,9 @@ async def handle_group_message(ctx: Context_T):
                 msg[0].append("[CQ:record,file=噫hihihihi.mp3,magic=false]")
         else:
             #每日首次发非指令消息时自动执行jrrp
-            first_jrrp(ctx,msg)
+            first_jrrp(ctx,msg)text
             #检测bv号
-            bvSearch(txt,msg)
+            bvSearch(text,msg)
 
         #发送消息
         await send_msg(msg,ctx)
