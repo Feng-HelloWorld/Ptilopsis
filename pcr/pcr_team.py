@@ -5,7 +5,7 @@ import pprint
 import sys
 sys.path.append('./pcr')
 
-from reply import Reply
+from reply import Reply, checkUserInfo
 
 cfg = dict()
 
@@ -70,6 +70,8 @@ class Log:
         else:
             self.damage = int(s[68:77].strip())
             self.hp_left = int(s[87:96].strip())
+        
+
 
     
     def __str__(self):
@@ -108,9 +110,11 @@ class LogBoard:
         for log in self.logs:
             if log.time>start_time and log.time<end_time:
                 if log.id==user_id and log.log_type[1]>0:
-                    result.append(log)
-                    
+                    result.append(log)    
         return result
+
+
+        
     
     def add(self,log:Log):
         self.logs.append(log)
@@ -122,7 +126,7 @@ class LogBoard:
             print(string)
             self.hp_left = log.fix
         else:
-            string = "[{}{}] {:<10s} [{:<12d}] 在{:0>2d}:{:0>2d}[{}]对第{}周目Boss[{}]造成了[{:>9d}]点伤害 剩余血量[{:>9d}]\n".format(log.log_type[0], log.log_type[1], log.name, log.id, t[3], t[4],log.time ,log.term, log.boss, log.damage, log.hp_left)
+            string = "[{}{}] {:<10s} [{:<12d}] 在{:0>2d}:{:0>2d}[{}]对第{}周目Boss[{}]造成了[{:>9d}]点伤害 剩余血量[{:>9d}]\n".format(log.log_type[0], log.log_type[1], log.name[0:10], log.id, t[3], t[4],log.time ,log.term, log.boss, log.damage, log.hp_left)
             fp.write( string )
             print(string)
             self.hp_left = log.hp_left
@@ -164,4 +168,21 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
 def checkStatus(reply:Reply):
     reply.add_group_msg("* 当前第{}周目Boss{} 剩余血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
     
-    
+async def checkAttendence(reply:Reply,start_time=10, end_time=100000000000):
+    start_time = reply.time()-(reply.time()-cfg["start_time"])%(3600*24)
+    end_time = cfg["end_time"]
+    temp = dict()
+    result = "* 今日未出刀列表:"
+    for item in cfg["user_list"]:
+        temp[item]=0
+    for log in log_board.logs:
+        if log.time>start_time and log.time<end_time:
+            if log.id in cfg["user_list"]:
+                temp[log.id]=log.log_type[1]
+    for item in cfg["user_list"]:
+        if temp[item]<3:
+            user_info = await checkUserInfo(reply.group_id(), item)
+            name = user_info["card"]
+            if name=='':name = user_info["nickname"]
+            result+="\n- {} 缺[{}]刀".format(name,3-temp[item]) 
+    reply.add_group_msg(result) 

@@ -52,3 +52,7 @@ class Reply:
             await bot.send_private_msg(user_id=id,message=msg)
         self.__messages_for_group.clear()
         self.__messages_for_private.clear()
+
+async def checkUserInfo(group_id, user_id):
+    info = await bot.get_group_member_info(group_id=group_id,user_id=user_id,no_cache=True)
+    return info

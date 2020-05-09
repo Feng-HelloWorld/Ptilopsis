@@ -9,7 +9,7 @@ import sys
 sys.path.append('./coc')
 sys.path.append('./pcr')
 from reply import Reply
-from pcr_team import loadSettings, addLog, checkStatus
+from pcr_team import loadSettings, addLog, checkStatus, checkAttendence
 from webGet import bvSearch, biliSearch
 from jrrp import jrrp, first_jrrp
 from voice import sing, sleep
@@ -64,11 +64,17 @@ async def handle_group_message(ctx: Context_T):
         elif re.match("^状态$",text):
             checkStatus(msg)
             await msg.send()
+        elif re.match("^查刀$",text):
+            await checkAttendence(msg)
+            await msg.send()
         elif re.match("^\.jrrp$",text,re.I):
             jrrp(msg)
             await msg.send()
         elif re.match("^\.sleep$",text,re.I):
             sleep(msg)
+            await msg.send()
+        elif re.match("^.*granbluefantasy\.jp.*$",text,re.I):
+            msg.add_group_msg("到处都是骑空士的陷阱")
             await msg.send()
         else:
             #混沌语音
@@ -97,6 +103,8 @@ def __text_only(ctx:Context_T):
         if msg[0]['type']=='text':
             return True
     return False
+
+
 
 def __getName(ctx:Context_T):
     """获取昵称, 没有就返回用户名"""
