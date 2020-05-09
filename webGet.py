@@ -1,8 +1,8 @@
 import requests
 import re
+from reply import Reply
 
-
-def biliSearch(name: str, msg: tuple):
+def biliSearch(name: str, reply:Reply):
     url = "https://search.bilibili.com/all?keyword="+name
     try:
         page=requests.Session().get(url) 
@@ -12,13 +12,11 @@ def biliSearch(name: str, msg: tuple):
         #print(link)
         up = re.search("up-name[^<]*<",page.text).group()[9:-1]
         #print(up)
-        msg[0].append(title)
-        msg[0].append("UP:{}".format(up))
-        msg[0].append(link)
+        reply.add_group_msg("{}\nUP:{}\n{}".format(title,up,link) )
     except:
-        msg[0].append("ERRO: 404咕")
+        reply.add_group_msg("ERRO: 404咕")
 
-def bvSearch(bv:str, msg:tuple):
+def bvSearch(bv:str, reply:Reply):
     if re.match("^BV[0-9a-zA-Z]+$",bv):
-        biliSearch(bv,msg)
+        biliSearch(bv, reply)
 

@@ -11,7 +11,7 @@ from jrrp import jrrp, first_jrrp
 #from webGet import biliSearch, bvSearch
 #from ban import is_ban, ban
 #from sleep import sleep
-#from random import choice
+#
 #from coc.coc import coc7th
 #=======
 #from webGet import biliSearch, bvSearch
