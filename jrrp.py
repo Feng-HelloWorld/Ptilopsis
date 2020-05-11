@@ -1,5 +1,6 @@
 import time
 import random
+from reply import Reply
 
 jr=dict()
 t=int((int(time.time())-1584129600)/86400)
@@ -31,16 +32,11 @@ def rollJrrp():
 
 
 
-def jrrp(ctx,msg:tuple):
-    """
-    jrrp指令\n
-    ctx\n
-    msg\n
-    Return: 无
-    """
+def jrrp(msg:Reply):
+    """jrrp指令"""
     #获取信息
-    QQ=str(ctx['user_id'])
-    name=__getName(ctx)
+    QQ=str(msg.user_id())
+    name=msg.user_name()
     #重新加载日期，若过期则清空数组，然后直接计算当前用户的新运势
     global t
     new_t = int((int(time.time())-1584129600)/86400)
@@ -56,12 +52,12 @@ def jrrp(ctx,msg:tuple):
         __write_to_file()
     rp=jr[QQ]        
     if rp>9:
-        msg[0].append("* {}的今日运势指数为【{}】".format(name,rp))
-        n=int(rp/5)
-        msg[0].append(">"*(n)+"="*(20-n))    
+        n=int(rp/5)   
+        result = "* {}的今日运势指数为【{}】\n".format(name,rp) + ">"*(n)+"="*(20-n)
+        msg.add_group_msg(result)
     else:
-        msg[0].append("* {}的今日运势...emmm...".format(name))
-        msg[0].append("- 摸摸头不哭")
+        result = "* {}的今日运势...emmm...\n- 摸摸头不哭".format(name)
+        msg.add_group_msg(result)
     
 def __write_to_file():
     fp=open('./jrrp.txt','w',encoding='utf-8')
@@ -70,30 +66,14 @@ def __write_to_file():
         fp.write("{}:{}\n".format(key,item))
     fp.close
 
-def __getName(ctx):
-    """
-    获取用户名 \n
-    ctx \n
-    Return: 若用户有马甲就返回马甲，没有就返回昵称 (str)
-    """
-    nick = ctx['sender']['card']
-    name = ctx['sender']['nickname']
-    if nick=='': return name
-    else: return nick
-
-def first_jrrp(ctx,msg:tuple):
-    """
-    每日首次发言自动jrrp\n
-    ctx\n
-    msg\n
-    Return: 无
-    """
+def first_jrrp(msg:Reply):
+    """每日首次发言自动jrrp"""
     #获取信息
-    QQ=str(ctx['user_id'])
+    QQ=str(msg.user_id())
     #重新加载日期，若过期则清空数组，然后直接计算当前用户的新运势
     global t
     new_t = int((int(time.time())-1584129600)/86400)
     if new_t > t:
-        jrrp(ctx,msg)
+        jrrp(msg)
     elif QQ not in jr.keys():
-        jrrp(ctx,msg) 
+        jrrp(msg) 
