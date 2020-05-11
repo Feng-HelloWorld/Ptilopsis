@@ -53,14 +53,16 @@ async def handle_group_message(ctx: Context_T):
             #msg.add_private_msg("!!!",3426285834)
             await msg.send()
         elif re.match("^报刀[0-9]+$",text):
-            addLog(msg, int(text[2:]))
-            await msg.send()
+            if int(text[2:])>0:
+                addLog(msg, int(text[2:]))
+                await msg.send()
         elif re.match("^尾刀$",text):
             addLog(msg)
             await msg.send()
         elif re.match("^修正[0-9]+$",text):
-            addLog(msg,0,int(text[2:]))
-            await msg.send()
+            if len(text)>2:
+                addLog(msg,0,int(text[2:]))
+                await msg.send()
         elif re.match("^状态$",text):
             checkStatus(msg)
             await msg.send()

@@ -6,6 +6,7 @@ import sys
 sys.path.append('./pcr')
 
 from reply import Reply, checkUserInfo
+from pcr.pcr_pic import thank
 
 cfg = dict()
 
@@ -150,6 +151,8 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
         if damage==0:damage=log_board.hp_left
         if damage>log_board.hp_left and fix==-1:
             reply.add_group_msg("* 伤害值大于boss剩余血量\n- 如果击杀boss，使用“尾刀”指令\n- 如果剩余血量和实际血量不符，联系管理员")
+        elif damage>700000 and fix==-1:
+            reply.add_group_msg("* ERRO：数值异常(>700,000)\n- 请检查输入的伤害值是否正确\n- 本记录未存档")
         else: 
             log = Log(reply.user_name(), reply.user_id(), reply.time(), damage, fix)
             if log.log_type[1]==0:
@@ -163,7 +166,23 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
             else:
                 log_board.add(log)
                 reply.add_group_msg("* {}的今日第{}刀 {}\n- 对第{}周目Boss{}造成{:,}点伤害，boss剩余血量{:,}".format(log.name, log.log_type[1], log.log_type[0], log.term, log.boss, log.damage, log.hp_left) )
-            if log.hp_left==0:reply.add_group_msg("* 当前Boss已被击败，进入下一阶段\n- 第{}周目Boss{} 血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
+
+                if log.log_type==("整刀",3) or log.log_type==("补刀",3):
+                    start_time = reply.time()-(reply.time()-cfg["start_time"])%(3600*24)
+                    end_time = cfg["end_time"]
+                    logs = log_board.getUserLogs(log.id, start_time, end_time)
+                    sum = 0
+                    for log in logs:
+                        sum += log.damage
+                    name = log.name
+                    if len(name)>10:name=name[0:9]+"..."
+                    thank(name, log.id, sum) 
+                    reply.add_group_msg('[CQ:image,file=thank_out.jpg]')
+            if log.hp_left==0:
+                reply.add_group_msg("* 当前Boss已被击败，进入下一阶段\n- 第{}周目Boss{} 血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
+            
+
+
 
 def checkStatus(reply:Reply):
     reply.add_group_msg("* 当前第{}周目Boss{} 剩余血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
