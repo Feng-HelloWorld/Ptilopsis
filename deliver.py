@@ -9,7 +9,7 @@ import sys
 sys.path.append('./coc')
 sys.path.append('./pcr')
 from reply import Reply
-from pcr_team import loadSettings, addLog, checkStatus, checkAttendence
+from pcr_team import loadSettings, addLog, checkStatus, checkAttendence, makeSubscribe, memberSum
 from webGet import bvSearch, biliSearch
 from jrrp import jrrp, first_jrrp
 from voice import sing, sleep
@@ -57,7 +57,10 @@ async def handle_group_message(ctx: Context_T):
                 addLog(msg, int(text[2:]))
                 await msg.send()
         elif re.match("^尾刀$",text):
-            addLog(msg)
+            addLog(msg,-1)
+            await msg.send()
+        elif re.match("^掉刀$",text):
+            addLog(msg,0,-1)
             await msg.send()
         elif re.match("^修正[0-9]+$",text):
             if len(text)>2:
@@ -66,8 +69,14 @@ async def handle_group_message(ctx: Context_T):
         elif re.match("^状态$",text):
             checkStatus(msg)
             await msg.send()
+        elif re.match("^预约[1-5]$",text):
+            makeSubscribe(msg,int(text[2])-1)
+            await msg.send()
         elif re.match("^查刀$",text):
             await checkAttendence(msg)
+            await msg.send()
+        elif re.match("^统计$",text):
+            await memberSum(msg)
             await msg.send()
         elif re.match("^\.jrrp$",text,re.I):
             jrrp(msg)
