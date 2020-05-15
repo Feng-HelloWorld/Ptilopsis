@@ -7,9 +7,10 @@ import json
 
 import sys
 sys.path.append('./coc')
-sys.path.append('./pcr')
+from coc.rd import rd
+from coc.ra import ra
+
 from reply import Reply
-from pcr_team import loadSettings, addLog, checkStatus, checkAttendence, makeSubscribe, memberSum
 from webGet import bvSearch, biliSearch
 from jrrp import jrrp, first_jrrp
 from voice import sing, sleep
@@ -47,58 +48,37 @@ async def handle_group_message(ctx: Context_T):
     if __text_only(ctx):
         #消息文本
         if text=='wwssaaddabab':
-            #msg.add_group_msg("输出测试1",596404376)
             msg.add_group_msg("Test success.",596404376)
-            #msg.add_private_msg("???")
-            #msg.add_private_msg("!!!",3426285834)
-            await msg.send()
-        elif re.match("^报刀[0-9]+$",text):
-            if int(text[2:])>0:
-                addLog(msg, int(text[2:]))
-                await msg.send()
-        elif re.match("^尾刀$",text):
-            addLog(msg,-1)
-            await msg.send()
-        elif re.match("^掉刀$",text):
-            addLog(msg,0,-1)
-            await msg.send()
-        elif re.match("^修正[0-9]+$",text):
-            if len(text)>2:
-                addLog(msg,0,int(text[2:]))
-                await msg.send()
-        elif re.match("^状态$",text):
-            checkStatus(msg)
-            await msg.send()
-        elif re.match("^预约[1-5]$",text):
-            makeSubscribe(msg,int(text[2])-1)
-            await msg.send()
-        elif re.match("^查刀$",text):
-            await checkAttendence(msg)
-            await msg.send()
-        elif re.match("^统计$",text):
-            await memberSum(msg)
             await msg.send()
         elif re.match("^\.jrrp$",text,re.I):
             jrrp(msg)
             await msg.send()
-        elif re.match("^\.sleep$",text,re.I):
+        elif re.match("^\.sleep$",text,re.I) and (msg.group_id() in cfg["voice_on"]):
             sleep(msg)
             await msg.send()
         elif re.match("^.*granbluefantasy\.jp.*$",text,re.I):
-            msg.add_group_msg("到处都是骑空士的陷阱")
+            msg.add_group_msg("到处都是沙雕骑空士的陷阱.jpg")
+            await msg.send()
+        elif re.match('^\.r\d*d\d*.*$',text,re.I):
+            rd(text,msg)
+            await msg.send()
+        elif re.match('^\.ra[ ]?\d+$',text,re.I):
+            ra(text,msg)
             await msg.send()
         else:
             #混沌语音
-            sing(text,msg)
+            if msg.group_id() in cfg["voice_on"]:
+                sing(text,msg)
             #检测bv号
-            bvSearch(text,msg)
+            if msg.group_id() in cfg["bv_search_on"]:
+                bvSearch(text,msg)
             #每日首次发非指令消息时自动执行jrrp
             if msg.group_id() in cfg["first_jrrp_on"]:
                 first_jrrp(msg)
             await msg.send()
 
     #如果是bilibili小程序分享
-    elif(is_bili_share(ctx)):
+    elif(is_bili_share(ctx) and (msg.group_id() in cfg["bv_search_on"])):
         name = is_bili_share(ctx)
         biliSearch(name, msg)
         await msg.send()
