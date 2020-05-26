@@ -2,7 +2,7 @@ import nonebot
 import re
 from nonebot.typing import Context_T
 import time
-from random import choice
+from random import choice, randint
 import json
 
 import sys
@@ -14,6 +14,7 @@ from reply import Reply
 from webGet import bvSearch, biliSearch
 from jrrp import jrrp, first_jrrp
 from voice import sing, sleep
+from image_check import imgCheck
 
 cfg = dict()
 
@@ -31,7 +32,6 @@ bot = nonebot.get_bot()
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx: Context_T):
-
     print("\n===NEW MESSAGE INCOME=================")
     time_num = time.mktime( time.gmtime( time.time() ) ) + 3600*8 #GMT+8
     time_str = time.strftime( "%b %d %a %H:%M:%S", time.gmtime( time.time()+ 3600*8 ) )
@@ -82,6 +82,18 @@ async def handle_group_message(ctx: Context_T):
         name = is_bili_share(ctx)
         biliSearch(name, msg)
         await msg.send()
+    #鉴黄
+    elif ctx.get("group_id") in cfg["imgCheck_list"]:
+        for message in ctx['message']:
+            if message['type']=='image':
+                if imgCheck(message['data']['url']):
+                    try:
+                        await bot.delete_msg(message_id=ctx['message_id'])
+                        await bot.set_group_ban(group_id=ctx['group_id'],user_id=ctx['user_id'],duration=60)
+                    except:
+                        print("* 撤回失败")
+                
+
         
 
     del msg

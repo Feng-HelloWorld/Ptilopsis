@@ -8,18 +8,18 @@ def ra(raw:str,msg:Reply):
     d100 = dice()[0]
     level = list()
     if d100==1:
-        level = ["大成功","天选之子"]
+        level = ["大成功"]
     elif d100<=stander/5:
-        level = ["极难成功","专业团队"]
+        level = ["极难成功"]
     elif d100<=stander/2:
-        level = ["困难成功","有两下子"]
+        level = ["困难成功"]
     elif d100<=stander:
-        level = ["成功","怎么就成功了呢"]
+        level = ["成功"]
     elif d100==100 or (d100>95 and stander<50):
-        level = ["大失败","哦豁，凉凉"]
+        level = ["大失败"]
         msg.add_group_msg("[CQ:record,file=凉凉.mp3,magic=false]")
     else:
-        level = ["失败","蔡 {} 蔡".format(msg.user_name())]           
+        level = ["失败"]           
     msg.add_group_msg("* {}进行检定 出目[{}]\n- {}".format(msg.user_name(),d100,choice(level)))
 
 
