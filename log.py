@@ -11,4 +11,4 @@ def filePath(group_id):
 
 def Time(timeZone:float):
     '''输入UTC时区，返回该时区的时间元组'''
-    return time.gmtime(time.ti me()+3600*timeZone)
+    return time.gmtime(time.time()+3600*timeZone)

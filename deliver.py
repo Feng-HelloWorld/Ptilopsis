@@ -7,13 +7,13 @@ import json
 
 import sys
 sys.path.append('./coc')
-from coc.rd import rd
-from coc.ra import ra
+#from coc.rd import rd
+#from coc.ra import ra
 
 from reply import Reply
-from webGet import bvSearch, biliSearch
-from jrrp import jrrp, first_jrrp
-from voice import sing, sleep
+#from webGet import bvSearch, biliSearch
+#from jrrp import jrrp, first_jrrp
+#from voice import sing, sleep
 from image_check import imgCheck
 
 cfg = dict()
