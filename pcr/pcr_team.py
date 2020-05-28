@@ -1,19 +1,30 @@
 import json
 import time
-import pprint
-
+import copy
 import sys
+from operator import itemgetter
 sys.path.append('./pcr')
 
 from reply import Reply, checkUserInfo
 from pcr.pcr_pic import thank
 
 cfg = dict()
+data = dict()
 
 def loadSettings():
     fp = open('./pcr/pcr_team.json', 'r',encoding="utf-8") 
     global cfg
     cfg = json.load(fp)
+    fp.close()
+    fp2 = open('./pcr/pcr_data.json', 'r',encoding="utf-8") 
+    global data
+    data = json.load(fp2)
+    fp2.close()
+
+def saveSettings():
+    fp2 = open('./pcr/pcr_data.json', 'w',encoding="utf-8") 
+    global data
+    json.dump(data,fp2)
 
 loadSettings()
 
@@ -56,6 +67,8 @@ class Log:
                 self.log_type = ("整刀",1)
         if fix>-1:
             self.log_type = ("修正",0)
+        if self.damage==0 and fix==-1:
+            self.log_type = ("掉刀",self.log_type[1])
 
     
     def import_from_str(self,s:str):
@@ -97,7 +110,6 @@ class LogBoard:
     def import_logs(self):
         fp = open("./pcr/pcr_team_log.txt","r",encoding="utf-8")
         for line in fp:
-            print("!!!",self.term,self.boss,self.hp_left)
             if len(line)>20:
                 log = Log("name",123,123,1,0)
                 log.import_from_str(line)
@@ -113,9 +125,6 @@ class LogBoard:
                 if log.id==user_id and log.log_type[1]>0:
                     result.append(log)    
         return result
-
-
-        
     
     def add(self,log:Log):
         self.logs.append(log)
@@ -147,8 +156,13 @@ log_board = LogBoard()
 log_board.import_logs()
 
 def addLog(reply:Reply, damage:int=0, fix:int=-1):
-    if reply.group_id() in cfg["on_group"]:
-        if damage==0:damage=log_board.hp_left
+    if (reply.group_id() in cfg["on_group"]) and (reply.time() > cfg['end_time']):
+        start_time = reply.time()-(reply.time()-cfg["start_time"])%(3600*24)
+        if start_time>data['member_refresh_time']:
+            data['member']=copy.deepcopy(data['member_init'])
+            data['member_refresh_time']=start_time
+            print("* 剩余出刀数已更新")
+        if damage==-1:damage=log_board.hp_left
         if damage>log_board.hp_left and fix==-1:
             reply.add_group_msg("* 伤害值大于boss剩余血量\n- 如果击杀boss，使用“尾刀”指令\n- 如果剩余血量和实际血量不符，联系管理员")
         elif damage>700000 and fix==-1:
@@ -161,14 +175,13 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
                     reply.add_group_msg("* {}已将第{}周目Boss{}剩余血量修正为{:,}".format(log.name, log.term, log.boss, log.fix) )
                 else:
                     reply.add_group_msg("* ERRO：需要管理员权限")
-            elif log.log_type[1]>3:
-                reply.add_group_msg("* ERRO: 今日已出满三刀\n- 如有错误请联系管理员")
+            elif data["member"][str(log.id)]==0:
+                reply.add_group_msg("* ERRO: 今日出刀次数已用完\n- 如有错误请联系管理员")
             else:
                 log_board.add(log)
                 reply.add_group_msg("* {}的今日第{}刀 {}\n- 对第{}周目Boss{}造成{:,}点伤害，boss剩余血量{:,}".format(log.name, log.log_type[1], log.log_type[0], log.term, log.boss, log.damage, log.hp_left) )
-
-                if log.log_type==("整刀",3) or log.log_type==("补刀",3):
-                    start_time = reply.time()-(reply.time()-cfg["start_time"])%(3600*24)
+                userDataRecord(log)
+                if data["member"][str(log.id)]==0:
                     end_time = cfg["end_time"]
                     logs = log_board.getUserLogs(log.id, start_time, end_time)
                     sum = 0
@@ -178,30 +191,68 @@ def addLog(reply:Reply, damage:int=0, fix:int=-1):
                     if len(name)>10:name=name[0:9]+"..."
                     thank(name, log.id, sum) 
                     reply.add_group_msg('[CQ:image,file=thank_out.jpg]')
-            if log.hp_left==0:
+            if (log.hp_left==0 and log.fix==-1) or (log.fix==0):
                 reply.add_group_msg("* 当前Boss已被击败，进入下一阶段\n- 第{}周目Boss{} 血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
-            
+                if len(data['subscribe'][log_board.boss-1])>0:
+                    string = "* [预约通知]"
+                    for people in data['subscribe'][log_board.boss-1]:
+                        string += ' [CQ:at,qq={}] '.format(people)
+                    data['subscribe'][log_board.boss-1].clear()
+                    saveSettings()
+                    reply.add_group_msg(string)
 
-
+def userDataRecord(log:Log):
+    if log.log_type[0]=="整刀" or log.log_type[0]=="补刀" or log.log_type[0]=="掉刀":
+        data["member"][str(log.id)]-=1
+        saveSettings()
+        print("* 已修改用户[{}]的剩余次数为[{}]".format(log.name, data["member"][str(log.id)]))
 
 def checkStatus(reply:Reply):
     reply.add_group_msg("* 当前第{}周目Boss{} 剩余血量[{:,}]".format(log_board.term, log_board.boss, log_board.hp_left))
+
+def takeFirst(elem):
+    return elem[0]
+def takeSecond(elem):return elem[1]
+
+
+async def memberSum(reply:Reply):
+    if reply.user_id() in cfg["admin"]:
+        temp = dict()
+        result = list()
+        for id in cfg['user_list']:
+            temp[str(id)] = 0
+        for log in log_board.logs:
+            if log.log_type[0]=="整刀" or log.log_type[0]=="补刀" or log.log_type[0]=="掉刀":
+                temp[str(log.id)] += 1
+        for key, value in temp.items():
+            t = (key,value)
+            result.append(t)
+        result.sort(key=takeFirst,reverse=False)
+        result.sort(key=takeSecond,reverse=True)
+        string = "* 本次会战总计出刀数据统计:"
+        for t in result:
+            user_info = await checkUserInfo(459888770, t[0])
+            name = user_info["card"] 
+            if name=='':name = user_info["nickname"]
+            string += "\n- {}合计出刀[{}]次".format(name,t[1])
+        reply.add_group_msg(string)
+
     
 async def checkAttendence(reply:Reply,start_time=10, end_time=100000000000):
     start_time = reply.time()-(reply.time()-cfg["start_time"])%(3600*24)
     end_time = cfg["end_time"]
-    temp = dict()
     result = "* 今日未出刀列表:"
     for item in cfg["user_list"]:
-        temp[item]=0
-    for log in log_board.logs:
-        if log.time>start_time and log.time<end_time:
-            if log.id in cfg["user_list"]:
-                temp[log.id]=log.log_type[1]
-    for item in cfg["user_list"]:
-        if temp[item]<3:
-            user_info = await checkUserInfo(reply.group_id(), item)
+        left = data["member"][str(item)]
+        if left >0:
+            print("[{}]未出完刀".format(item))
+            user_info = await checkUserInfo(459888770, item)
             name = user_info["card"]
             if name=='':name = user_info["nickname"]
-            result+="\n- {} 缺[{}]刀".format(name,3-temp[item]) 
+            result+="\n- {} 缺[{}]刀".format(name,left)   
     reply.add_group_msg(result) 
+
+def makeSubscribe(reply:Reply, boss:int):
+    if reply.user_id() not in data['subscribe'][boss]:data['subscribe'][boss].append(reply.user_id())
+    saveSettings()
+    reply.add_group_msg("* [{}]已预约Boss[{}]，将在下次轮替到此Boss时收到通知".format(reply.user_name(), boss+1))

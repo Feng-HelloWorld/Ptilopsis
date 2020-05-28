@@ -2,17 +2,19 @@ import nonebot
 import re
 from nonebot.typing import Context_T
 import time
-from random import choice
+from random import choice, randint
 import json
 
 import sys
 sys.path.append('./coc')
-sys.path.append('./pcr')
+from coc.rd import rd
+from coc.ra import ra
+
 from reply import Reply
-from pcr_team import loadSettings, addLog, checkStatus, checkAttendence
 from webGet import bvSearch, biliSearch
 from jrrp import jrrp, first_jrrp
 from voice import sing, sleep
+from image_check import imgCheck
 
 cfg = dict()
 
@@ -30,7 +32,6 @@ bot = nonebot.get_bot()
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx: Context_T):
-
     print("\n===NEW MESSAGE INCOME=================")
     time_num = time.mktime( time.gmtime( time.time() ) ) + 3600*8 #GMT+8
     time_str = time.strftime( "%b %d %a %H:%M:%S", time.gmtime( time.time()+ 3600*8 ) )
@@ -42,57 +43,57 @@ async def handle_group_message(ctx: Context_T):
     text = ctx['raw_message']
     print(text)
     msg = Reply(user_id, user_name, group_id, time_num)
-
+    print("===CTX=======\n",ctx)
     #如果消息为纯文本
     if __text_only(ctx):
         #消息文本
         if text=='wwssaaddabab':
-            #msg.add_group_msg("输出测试1",596404376)
             msg.add_group_msg("Test success.",596404376)
-            #msg.add_private_msg("???")
-            #msg.add_private_msg("!!!",3426285834)
-            await msg.send()
-        elif re.match("^报刀[0-9]+$",text):
-            if int(text[2:])>0:
-                addLog(msg, int(text[2:]))
-                await msg.send()
-        elif re.match("^尾刀$",text):
-            addLog(msg)
-            await msg.send()
-        elif re.match("^修正[0-9]+$",text):
-            if len(text)>2:
-                addLog(msg,0,int(text[2:]))
-                await msg.send()
-        elif re.match("^状态$",text):
-            checkStatus(msg)
-            await msg.send()
-        elif re.match("^查刀$",text):
-            await checkAttendence(msg)
             await msg.send()
         elif re.match("^\.jrrp$",text,re.I):
             jrrp(msg)
             await msg.send()
-        elif re.match("^\.sleep$",text,re.I):
+        elif re.match("^\.sleep$",text,re.I) and (msg.group_id() in cfg["voice_on"]):
             sleep(msg)
             await msg.send()
         elif re.match("^.*granbluefantasy\.jp.*$",text,re.I):
-            msg.add_group_msg("到处都是骑空士的陷阱")
+            msg.add_group_msg("到处都是沙雕骑空士的陷阱.jpg")
+            await msg.send()
+        elif re.match('^\.r\d*d\d*.*$',text,re.I):
+            rd(text,msg)
+            await msg.send()
+        elif re.match('^\.ra[ ]?\d+$',text,re.I):
+            ra(text,msg)
             await msg.send()
         else:
             #混沌语音
-            sing(text,msg)
+            if msg.group_id() in cfg["voice_on"]:
+                sing(text,msg)
             #检测bv号
-            bvSearch(text,msg)
+            if msg.group_id() in cfg["bv_search_on"]:
+                bvSearch(text,msg)
             #每日首次发非指令消息时自动执行jrrp
             if msg.group_id() in cfg["first_jrrp_on"]:
                 first_jrrp(msg)
             await msg.send()
 
     #如果是bilibili小程序分享
-    elif(is_bili_share(ctx)):
+    elif(is_bili_share(ctx) and (msg.group_id() in cfg["bv_search_on"])):
         name = is_bili_share(ctx)
         biliSearch(name, msg)
         await msg.send()
+    #鉴黄
+    elif ctx.get("group_id") in cfg["imgCheck_list"]:
+        for message in ctx['message']:
+            if message['type']=='image':
+                if imgCheck(message['data']['url']):
+                    try:
+                        await bot.delete_msg(message_id=ctx['message_id'])
+                        await bot.set_group_ban(group_id=ctx['group_id'],user_id=ctx['user_id'],duration=60)
+                    except:
+                        print("* 撤回失败")
+                
+
         
 
     del msg

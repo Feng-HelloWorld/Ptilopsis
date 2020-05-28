@@ -17,14 +17,14 @@ fp.close
 
 def rollJrrp():
     """
-    按照4:7:9:6的比例返回1-20/21-50/51-80/81-100的jrrp
+    按照4:6:9:7的比例返回1-20/21-50/51-80/81-100的jrrp
     """
     scale = random.randint(1,28)
     if scale<=4:
         final = random.randint(1,20)
-    elif scale<=13:
+    elif scale<=12:
         final = random.randint(21,50)    
-    elif scale<=22:
+    elif scale<=21:
         final = random.randint(51,80)
     else:
         final = random.randint(81,100)
@@ -53,10 +53,10 @@ def jrrp(msg:Reply):
     rp=jr[QQ]        
     if rp>9:
         n=int(rp/5)   
-        result = "* {}的今日运势指数为【{}】\n".format(name,rp) + ">"*(n)+"="*(20-n)
+        result = "* {}的今日运势指数为【{}】\n".format(name,rp) + ">"*(n)+"="*(20-n) + "\n- 结果仅供参考"
         msg.add_group_msg(result)
     else:
-        result = "* {}的今日运势...emmm...\n- 摸摸头不哭".format(name)
+        result = "* {}的今日运势...emmm...\n- 摸摸头不哭\n- 结果仅供参考".format(name)
         msg.add_group_msg(result)
     
 def __write_to_file():

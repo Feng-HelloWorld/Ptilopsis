@@ -1,39 +1,24 @@
 import re
 from dice import dice
+from reply import Reply
 
-def rd(raw:str,ctx,msg:tuple):
-    """
-    rd指令\n
-    raw: 指令原文\n
-    ctx\n
-    msg\n
-    Return: 无
-    """
+def rd(raw:str,msg:Reply):
+    """rd指令"""
+    reason = '普通骰子'
+    if re.match('.+ .+',raw):
+        temp = raw.strip().split(' ')
+        raw = temp[0]
+        reason = temp[1]
     raw = raw[2:]
     cmdList = []
-    try:
-        cmds = raw.strip().split('+')
-        for cmd in cmds:
-            if (re.match('^\d*[dD]\d*$',cmd) or re.match('^\d+$',cmd)):
-                cmdList.append(cmd)
-            else:
-                raise Exception
-                break
-        result = dice(cmdList)
-        msg[0].append("* "+__getName(ctx)+"投掷"+raw.lower())
-        msg[0].append("- 出目："+str(result[0]))
-    except Exception:
-        msg[0].append("你说这些谁懂啊？")
-        msg[0].append('[CQ:image,file=exc.jpg]')
-        print("**WARN：指令错误！")
-
-def __getName(ctx):
-    """
-    获取用户名 \n
-    ctx \n
-    Return: 若用户有马甲就返回马甲，没有就返回昵称 (str)
-    """
-    nick = ctx['sender']['card']
-    name = ctx['sender']['nickname']
-    if nick=='': return name
-    else: return nick
+    cmds = raw.strip().split('+')
+    for cmd in cmds:
+        if (re.match('^\d*[dD]\d*$',cmd) or re.match('^\d+$',cmd)):
+            cmdList.append(cmd)
+        else:
+            msg.add_group_msg("你说这些谁懂啊？\n[CQ:image,file=exc.jpg]")
+            print("**WARN：指令错误！")
+            return 0
+            break
+    result = dice(cmdList)
+    msg.add_group_msg("* {}投掷 {} [{}]\n- 出目[{}]".format(msg.user_name(),raw.lower(),reason,result[0]))
