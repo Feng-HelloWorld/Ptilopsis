@@ -21,6 +21,7 @@ def imgCheck(url:str):
             }
     request.set_content(bytearray(json.dumps({"tasks": [task], "scenes": ["porn"]}), "utf-8"))
     response = clt.do_action(request)
+    print("===Response=======\n",response)
     result = json.loads(response)
     if 200 == result["code"]:
         taskResults = result["data"]

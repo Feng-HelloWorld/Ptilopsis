@@ -1,11 +1,8 @@
 import time
 import json
 
+from log import filePath
+
 #cfg = dict()
 
-def a():
-    print(1)
-    return 0
-    print(2)
-
-a()
+filePath('111')

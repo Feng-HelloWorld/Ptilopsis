@@ -43,7 +43,7 @@ async def handle_group_message(ctx: Context_T):
     text = ctx['raw_message']
     print(text)
     msg = Reply(user_id, user_name, group_id, time_num)
-
+    print("===CTX=======\n",ctx)
     #如果消息为纯文本
     if __text_only(ctx):
         #消息文本
