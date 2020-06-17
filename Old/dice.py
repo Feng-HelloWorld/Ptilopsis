@@ -5,7 +5,6 @@ class dice:
     raw_numbers = list()
     raw_sum = int()
 
-
 #普通骰            
 def dice(cmdList=['d100']):
     '''
