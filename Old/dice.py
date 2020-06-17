@@ -6,7 +6,7 @@ class dice:
     raw_sum = int()
 
 #普通骰            
-def dice(cmdList=['d100']):
+def dice(cmdList=['+d100']):
     '''
     根据指令列表进行投掷检定 \n
     cmdList: 指令列表 list(str) \n

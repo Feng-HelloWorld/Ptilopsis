@@ -1,7 +1,7 @@
 import random
 
 #普通骰            
-def dice(cmd_list=['d100']):
+def dice(cmd_list=['+d100']):
     '''
     根据指令列表进行投掷检定 \n
     cmd_list: 指令列表 list(str) \n
@@ -40,3 +40,23 @@ def dice(cmd_list=['d100']):
                     sum += negative*random.randint(1,num[1])
     return sum
 
+#奖惩骰
+def add_dice(ori_dice:int,cmd:str):
+    ''''''
+    print('Param',ori_dice,cmd)
+    cmd = int(cmd)
+    dice_list = list()
+    if cmd>0:#奖励骰
+        for i in range(cmd):
+            temp = random.randint(0,9)
+            dice_list.append(temp)
+            if temp<ori_dice/10:ori_dice = temp*10 + ori_dice%10
+            if ori_dice<1:ori_dice=1
+    elif cmd<0:
+        for i in range(cmd*-1):
+            temp = random.randint(1,10)
+            dice_list.append(temp)
+            if temp>ori_dice/10:ori_dice = temp*10 + ori_dice%10
+            if ori_dice>100:ori_dice=100
+    return (ori_dice,dice_list)
+            
