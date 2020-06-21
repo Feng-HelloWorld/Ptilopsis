@@ -52,7 +52,7 @@ def add_dice(ori_dice:int,cmd:str):
             dice_list.append(temp)
             if temp<ori_dice/10:ori_dice = temp*10 + ori_dice%10
             if ori_dice<1:ori_dice=1
-    elif cmd<0:
+    elif cmd<0:#惩罚骰
         for i in range(cmd*-1):
             temp = random.randint(1,10)
             dice_list.append(temp)

@@ -41,6 +41,7 @@ async def rd(reply:Reply, text:str):
 
 
 def success_level(d100:int,stander:int):
+    '''根据传入检定结果和成功率，返回成功等级'''
     if d100==1:
         return (10,"大成功")
     elif d100<=stander/5:
@@ -56,37 +57,37 @@ def success_level(d100:int,stander:int):
 
 async def ra(reply:Reply, text:str):
     ''''''
-    print('开始执行ra指令')
+    #print('开始执行ra指令')
     if reply.group_id() in cfg['bot_on']:
         temp = re.match('^\.ra([\+\-][1-3])? ([^\d ]*)[ ]?(\d+)([\+\-]\d+)?$',text)
-        print('Temp值：',temp)
+        #print('Temp值：',temp)
         try:
             add = temp.group(1)
-            print('Add',add)
+            #print('Add',add)
             comment = temp.group(2)
             if comment==None:comment=''#默认值
-            print('Comment',comment)
+            #print('Comment',comment)
             buff = temp.group(4)
             if buff==None:buff=0
-            print('Buff',buff)
+            #print('Buff',buff)
             stander = int(temp.group(3)) + int(buff)
-            print('Stander',stander)
+            #print('Stander',stander)
             if stander<0 or stander>100:raise RuntimeError('[ERRO] ra检定值参数错误: {}'.format(stander))
             ori_dice = dice()#扔一个百分骰
-            print('Ori',ori_dice)
+            #print('Ori',ori_dice)
             if add==None:
                 result = success_level(ori_dice,stander)
-                print('Result',result)
-                reply.add_group_msg('* {}进行了一次成功率{}%的{}检定\n- 出目[{}] {}'.format(reply.user_name(),  stander,comment, ori_dice, result[1]) )
+                #print('Result',result)
+                reply.add_group_msg('* {}进行了一次成功率{}%的{}检定\n- 出目[{}]  {}'.format(reply.user_name(),  stander,comment, ori_dice, result[1]) )
                 await writeLog(logPath, '[ra]{} {}[{}]在群[{}]进行了一次成功率{}%的{}检定 出目[{}]{}'.format(reply.time().print(),reply.user_name(),reply.user_id(),reply.group_id(),  stander,comment, ori_dice, result[1]) )
             else:
                 final_dice = add_dice(ori_dice, add)
-                print('Final Dice',final_dice)
+                #print('Final Dice',final_dice)
                 result = success_level(final_dice[0],stander)
-                print('Result',result)
+                #print('Result',result)
                 dice_type = '惩罚骰'
                 if int(add)>0:dice_type='奖励骰'
-                reply.add_group_msg('* {}进行了一次成功率{}%的{}检定 出目[{}]\n- {}:{} 出目[{}] {}'.format( reply.user_name(), stander, comment, ori_dice, dice_type, final_dice[1], final_dice[0], result[1] ))
+                reply.add_group_msg('* {}进行了一次成功率{}%的{}检定\n- 出目[{}]  {}{}\n- 最终检定结果[{}]  {}'.format( reply.user_name(), stander, comment, ori_dice, dice_type, final_dice[1], final_dice[0], result[1] ))
                 await writeLog(logPath, '[ra]{} {}[{}]在群[{}]进行了一次成功率{}%的{}检定({}) {}{} 出目[{}]{}'.format( reply.time().print(),reply.user_name(),reply.user_id(),reply.group_id(),  stander,comment, ori_dice, dice_type, final_dice[1], final_dice[0], result[1] ))
             await reply.send()
         except:

@@ -35,7 +35,7 @@ for name in dirList:
         sys.path.append('./Mods/'+name)
         mod = importlib.import_module(name+'.Cmd')
         for regex, func in mod.cmdList.items():
-            print('* Import Success:',regex,func)
+            print('* Success:',regex,func)
         cmds.update(mod.cmdList)
         print('='*32)
 ################

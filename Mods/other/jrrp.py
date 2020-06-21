@@ -1,6 +1,5 @@
 from reply import Reply
 from funcs import *
-import json
 import random
 
 cfgPath = './Mods/other/jrrp.json'
@@ -22,6 +21,7 @@ async def jrrp(reply:Reply, text:str):
         print('[ERRO] jrrp指令未在此群开启')
 
 async def dayChange(time_now:Time):
+    print(time_now,Time( cfg['today']))
     if not time_now.isSameDay(Time(cfg['today']), refresh=4):
         cfg['today']=time_now.print()
         cfg['record']=dict()

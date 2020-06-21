@@ -18,6 +18,7 @@ class Reply:
         self.__user_id = user_id
         self.__user_name = user_name
         self.__group_id = group_id
+        self.__time = Time()
 
     def add_group_msg(self, msg:str, id=000):
         if id==000:id=self.__group_id
