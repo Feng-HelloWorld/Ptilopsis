@@ -14,5 +14,7 @@ cmdList = {
     '^.suisei$':sing,
     '^.索兰调$':sing,
     '^.matsuri$':sing,
-    '^.sora$':sing
+    '^.sora$':sing,
+    '^.muri$':sing,
+    '^.renge$':sing
 }
