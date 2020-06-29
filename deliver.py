@@ -42,7 +42,7 @@ for name in dirList:
 
 bot = nonebot.get_bot()
 
-#群消息处理
+#消息处理
 @bot.on_message('private') 
 async def handle_group_message(ctx:Context_T):
     pass
@@ -51,6 +51,7 @@ async def handle_group_message(ctx:Context_T):
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx:Context_T):
+    
     group_id = ctx.get('group_id')
     if group_id in cfg['bot_on']:
         
