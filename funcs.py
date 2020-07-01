@@ -13,7 +13,7 @@ class Time:
     def __init__(self, Input = 000):
         '''初始化函数，若传入参数为字符串则进行解析，默认为当前时间戳'''
         if Input==000:Input=time.time()
-        if type(Input)==float:
+        if type(Input)==float or type(Input)==int:
             self.__stamp = Input  
         elif type(Input)==str:
             time_zone = float( Input[21:-1] )

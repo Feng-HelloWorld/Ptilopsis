@@ -5,6 +5,7 @@ from pic import checkAttendencePic, thankPic
 import json
 import random
 import re
+import requests
 
 cfg = dict()
 data = dict()
@@ -85,14 +86,66 @@ async def zhuangtai(reply:Reply, text:str):
     '''状态'''
     if reply.group_id() in cfg['bot_on']:
         if str(reply.user_id()) in cfg['member'].keys():
-            
-            reply.add_group_msg("当前第{}周目Boss{} 剩余血量[{:,d}]".format(data['term'], data['boss'], data['hp']))
+            r = await rank(reply, 'string')
+            reply.add_group_msg("* 当前第{}周目Boss{} 剩余血量[{:,d}]\n{}".format(data['term'], data['boss'], data['hp'], r))
             await reply.send()
+            
         else:
             reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
             await reply.send()   
     else:
         print('[ERRO] 报刀指令未在此群开启')
+
+#排行
+async def rank(reply:Reply, text:str):
+    '''获取公会排名'''
+    if reply.group_id() in cfg['bot_on']:
+        if str(reply.user_id()) in cfg['member'].keys():
+            #检查是否已获取到最新数据
+            if time.time()-data['rank'][1]<1800:
+                rank = data['rank'][0]
+                t = Time(data['rank'][1]).print()[11:16]
+                if text=="string":return "- 公会{}排名 [{}]位".format(t,rank)#以字符串形式返回
+                reply.add_group_msg("* 公会{}排名 [{}]位".format(t,rank))
+                await reply.send()
+            else:
+                #获取排名
+                header = {
+                    'Host': 'service-kjcbcnmw-1254119946.gz.apigw.tencentcs.com',
+                    'Connection': 'keep-alive',
+                    'Content-Length': '21',
+                    'DNT': '1',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
+                    'Content-Type': 'application/json',
+                    'Origin': 'https://kengxxiao.github.io',
+                    'Sec-Fetch-Site': 'cross-site',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Referer': 'https://kengxxiao.github.io/Kyouka/'
+                }
+                result = requests.post('https://service-kjcbcnmw-1254119946.gz.apigw.tencentcs.com/name/0', data=json.dumps({'clanName':'桃星'}), headers=header)
+                if result.status_code==200:
+                    temp = result.json()
+                    rank = temp['data'][0]['rank']
+                    t = Time(temp['ts']).print()[11:16]
+                    #更新数据文件
+                    if not temp['ts']== data['rank'][1]:
+                        data['rank'][0]=rank
+                        data['rank'][1]=temp['ts']
+                        await saveSettings(dataPath, data)
+                    if text=="string":return "- 公会{}排名 [{}]位".format(t,rank)#以字符串形式返回
+                    reply.add_group_msg("* 公会{}排名 [{}]位".format(t,rank))
+                    await reply.send()
+
+                else:
+                    if text=="string":return "[ERRO] 服务器发生错误 返回值[{}]".format(result.status_code)#以字符串形式返回
+                    reply.add_group_msg("[ERRO] 服务器发生错误\n- 返回值[{}]".format(result.status_code))
+                    await reply.send()
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
+    else:
+        print('[ERRO] 排行指令未在此群开启')
 
 #报刀
 async def baodao(reply:Reply, text:str):
@@ -203,8 +256,9 @@ async def weidao(reply:Reply, text:str):
                     #预约
                     if len( data['subscribe'][data['boss']-1] )>0:
                         for id in data['subscribe'][data['boss']-1]:
-                            reply.add_private_msg('[预约提醒] 你预约的Boss[{}]已可供挑战'.format(data['boss']))
+                            reply.add_private_msg('[预约提醒] 你预约的Boss[{}]已可供挑战'.format(data['boss']), id)
                             await reply.send()
+                        data['subscribe'][data['boss']-1] = list()
                 else:
                     reply.add_group_msg('* 今日出刀数已满，如有错误请联系管理员')
                     await reply.send()                    

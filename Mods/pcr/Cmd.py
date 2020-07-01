@@ -1,4 +1,4 @@
-from teamFight import jiaru, tuichu, tichu, zhuangtai, baodao, weidao, chadao, guashu, xiashu, chashu, yuyue, quxiaoyuyue
+from teamFight import jiaru, tuichu, tichu, zhuangtai, baodao, weidao, chadao, guashu, xiashu, chashu, yuyue, quxiaoyuyue, rank
 
 #模块指令列表
 cmdList = {
@@ -14,5 +14,7 @@ cmdList = {
     '^下树$':xiashu,
     '^查树$':chashu,    
     '^预约[1-5]$':yuyue, 
-    '^取消预约[1-5]$':quxiaoyuyue 
+    '^取消预约[1-5]$':quxiaoyuyue,
+    '^(公会)?排名$':rank,
+    '^(公会)?排行$':rank 
 }
