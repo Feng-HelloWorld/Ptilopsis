@@ -105,7 +105,7 @@ def loadSettings(file_path:str):
 async def saveSettings(file_path:str, cfg:dict):
     '''将内存中的json数据存入指定文件'''
     fp = open(file_path, 'w',encoding="utf-8") 
-    json.dump(cfg,fp,indent=4,ensure_ascii=True)
+    json.dump(cfg,fp,indent=4,ensure_ascii=False)
     fp.close()
 
 async def writeLog(file_path:str, record:str):
