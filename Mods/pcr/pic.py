@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-
+import random
 import sys
 sys.path.append('./Mods/pcr')
 
@@ -20,15 +20,32 @@ async def savePic(image,fileName):
     os.rename(file_path+'.png',file_path+'.jpg')
 
 async def thankPic(name, id, total_damage):
-    image, img_draw = initPic('./Mods/pcr/thank2.png')
+
+    pic = random.randint(1,5)
+    #pic =5
+    if pic==1:
+        image, img_draw = initPic('./Mods/pcr/thank.png')
+        left_side = 580
+    elif pic==2:
+        image, img_draw = initPic('./Mods/pcr/thank2.png')
+        left_side = 80
+    elif pic==3:
+        image, img_draw = initPic('./Mods/pcr/thank3.png')
+        left_side = 540
+    elif pic==4:
+        image, img_draw = initPic('./Mods/pcr/thank4.png')
+        left_side = 80
+    elif pic==5:
+        image, img_draw = initPic('./Mods/pcr/thank5.png')
+        left_side = 80
+
     ttf_name = ImageFont.truetype('./Mods/pcr/bold.ttf',80)
     ttf_id = ImageFont.truetype('./Mods/pcr/bold.ttf',40)
     ttf = ImageFont.truetype('./Mods/pcr/bold.ttf',70)
     ttf_small = ImageFont.truetype('./Mods/pcr/bold.ttf',40)
     ttf_damage = ImageFont.truetype('./Mods/pcr/bold.ttf',140)
     ttf_japan = ImageFont.truetype('./Mods/pcr/japan.ttf',140)
-
-    left_side = 80
+    
     top_side = 80
 
     img_draw.text( (left_side,top_side+20), name, font=ttf_name, fill=(0,0,0) )
