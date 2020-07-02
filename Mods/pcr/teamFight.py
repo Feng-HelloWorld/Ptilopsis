@@ -2,6 +2,7 @@ from reply import Reply
 from funcs import *
 from dice import *
 from pic import checkAttendencePic, thankPic
+from copy import deepcopy
 import json
 import random
 import re
@@ -87,7 +88,7 @@ async def zhuangtai(reply:Reply, text:str):
     if reply.group_id() in cfg['bot_on']:
         if str(reply.user_id()) in cfg['member'].keys():
             r = await rank(reply, 'string')
-            reply.add_group_msg("* 当前第{}周目Boss{} 剩余血量[{:,d}]\n{}".format(data['term'], data['boss'], data['hp'], r))
+            reply.add_group_msg("* 当前第{}周目Boss[{}] 剩余血量[{:,d}]\n{}".format(data['term'], data['boss'], data['hp'], r))
             await reply.send()
             
         else:
@@ -172,6 +173,7 @@ async def baodao(reply:Reply, text:str):
                     #数据写入
                     if left%1==0.5:#这一刀是补刀
                         left -= 0.5
+                        left = int(left)
                         log_type = '补刀'
                     else:#这一刀是整刀
                         left -= 1
@@ -179,15 +181,14 @@ async def baodao(reply:Reply, text:str):
                     data['absent'][str(reply.user_id())]=left  
                     num = cfg['member_init'][str(reply.user_id())]-left
                     data['hp']-=damage
-                    temp = { 'Time':reply.time().print(), 'Boss':data['boss'], 'Type':log_type, 'Num':num, 'Damage':damage }
-                    
+                    temp = { 'Time':reply.time().print(), 'Boss':data['boss']+data['term']*10, 'Type':log_type, 'Num':num, 'Damage':damage }
                     data['today_logs'][str(reply.user_id())].append(temp)
                     await saveSettings(dataPath, data)
                     #发送消息
-                    reply.add_group_msg('* {}今日第[{}]刀 {}\n- 对{}周目Boss{}造成[{:,d}]伤害\n- 剩余血量 [{:,d}]'.format(reply.user_name(), temp['Num'] , log_type , data['term'], data['boss'], damage, data['hp']))
+                    reply.add_group_msg('* {}今日第[{}]刀 {}\n- 对{}周目Boss[{}]造成[{:,d}]伤害\n- 剩余血量 [{:,d}]'.format(reply.user_name(), temp['Num'] , log_type , data['term'], data['boss'], damage, data['hp']))
                     await reply.send()
                     #写入log
-                    await writeLog(logPath, '{}  {}第[{}]刀{},对{}周目Boss{}造成[{:,d}]伤害,剩余血量[{:,d}]'.format(reply.time().print(), reply.user_name(), temp['Num'] , log_type , data['term'], data['boss'], damage, data['hp']))
+                    await writeLog(logPath, '{}  {}第[{}]刀{},对{}周目Boss[{}]造成[{:,d}]伤害,剩余血量[{:,d}]'.format(reply.time().print(), reply.user_name(), temp['Num'] , log_type , data['term'], data['boss'], damage, data['hp']))
                     #thank
                     if left==0:
                         #结算总伤害
@@ -228,14 +229,15 @@ async def weidao(reply:Reply, text:str):
                 if str(reply.user_id()) not in data['absent'].keys():#新建上限
                     data['absent'][str(reply.user_id())]=cfg['member_init'][str(reply.user_id())]
                 left = data['absent'][str(reply.user_id())]-0.5
+                if left%1==0: left = int(left) #将left切回整数
                 if left>0:
                     #数据写入
                     data['absent'][str(reply.user_id())]=left  
                     num = cfg['member_init'][str(reply.user_id())]-left
-                    temp = { 'Time':reply.time().print(), 'Boss':data['boss'], 'Type':'尾刀', 'Num':num, 'Damage':damage }
+                    temp = { 'Time':reply.time().print(), 'Boss':data['boss']+data['term']*10, 'Type':'尾刀', 'Num':num, 'Damage':damage }
                     data['today_logs'][str(reply.user_id())].append(temp)
                     #发送消息
-                    reply.add_group_msg('* {}今日第[{}]刀 尾刀\n- 对{}周目Boss{}造成[{:,d}]伤害\n- 当前Boss已被击杀'.format(reply.user_name(), temp['Num'] , data['term'], data['boss'], damage))
+                    reply.add_group_msg('* {}今日第[{}]刀 尾刀\n- 对{}周目Boss[{}]造成[{:,d}]伤害\n- 当前Boss已被击杀'.format(reply.user_name(), temp['Num'] , data['term'], data['boss'], damage))
                     await reply.send()
                     #数据写入2
                     if data['boss']==5:
@@ -245,7 +247,7 @@ async def weidao(reply:Reply, text:str):
                     data['hp']=cfg['boss_init'][data['boss']-1]
                     await saveSettings(dataPath, data)
                     #写入log
-                    await writeLog(logPath, '{}  {}第[{}]刀尾刀,对{}周目Boss{}造成[{:,d}]伤害,当前Boss已被击杀'.format(reply.time().print(), reply.user_name(), temp['Num'] , data['term'], data['boss'], damage))
+                    await writeLog(logPath, '{}  {}第[{}]刀尾刀,对{}周目Boss[{}]造成[{:,d}]伤害,当前Boss已被击杀'.format(reply.time().print(), reply.user_name(), temp['Num'] , data['term'], data['boss'], damage))
                     #砍树
                     if len(data['tree'])>0:
                         temp = '[下树通知] '
@@ -269,6 +271,47 @@ async def weidao(reply:Reply, text:str):
     else:
         print('[ERRO] 尾刀指令未在此群开启')
 
+#修正
+async def xiuzheng(reply:Reply, text:str):
+    pass
+
+#撤销
+async def chexiao(reply:Reply, text:str):
+    '''撤销'''
+    if reply.group_id() in cfg['bot_on']:
+        if str(reply.user_id()) in cfg['member'].keys():
+            await dayChange(reply)
+            if str(reply.user_id()) in data['today_logs'].keys():
+                #获取数据
+                record=data['today_logs'][str(reply.user_id())][-1]
+                if record['Boss']==data['boss']+data['term']*10:
+                    #Boss回血
+                    data['hp']+=record['Damage']
+                    #写入日志
+                    await writeLog(logPath, '{}  {}第[{}]刀{}被撤回,剩余血量[{:,d}]'.format(reply.time().print(), reply.user_name(),record['Num'],record['Type'],data['hp']) )
+                    #发送消息
+                    reply.add_group_msg('* {}今日第[{}]刀 {} 被撤回\n- Boss剩余血量[{:,d}]'.format( reply.user_name(),record['Num'],record['Type'],data['hp']))
+                    await reply.send()
+                    #记刀数增加
+                    if record['Type']=='整刀':
+                        data['absent'][str(reply.user_id())]+=1
+                    else:
+                        data['absent'][str(reply.user_id())]+=0.5
+                    #数据擦除
+                    if len(record)==2:
+                        data['today_logs'].pop(str(reply.user_id()))
+                    else:
+                        data['today_logs'][str(reply.user_id())].pop()
+                    await saveSettings(dataPath,data)
+                else: 
+                    reply.add_group_msg('* 只能撤回对当前Boss造成的伤害')
+                    await reply.send() 
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
+    else:
+        print('[ERRO] 撤销指令未在此群开启')
+
 #查刀
 async def chadao(reply:Reply, text:str):
     '''查刀'''
@@ -276,7 +319,6 @@ async def chadao(reply:Reply, text:str):
         if str(reply.user_id()) in cfg['member'].keys():
             await dayChange(reply)
             damage = data['hp']
-
             temp = list()
             for id, left in data['absent'].items():
                 if left>0:
@@ -294,9 +336,9 @@ async def chadao(reply:Reply, text:str):
 async def dayChange(reply:Reply):
     now = Time()
     if not now.isSameDay(Time(data['record_date']),5):
-        await writeLog(logPath,"===============\nDay Change\n=====================")
+        await writeLog(logPath,"=====================\nDay Change\n=====================")
         data['record_date'] = now.print()
-        data['absent']=cfg['member_init']
+        data['absent']=deepcopy(cfg['member_init'])
         data['today_logs']=dict()
         await saveSettings(dataPath, data)
         
@@ -339,7 +381,7 @@ async def yuyue(reply:Reply, text:str):
     if reply.user_id() not in data['subscribe'][index]:
         data['subscribe'][index].append(reply.user_id())
         await saveSettings(dataPath, data)
-        reply.add_group_msg('* 已预约Boss[{}], 当鲨到此Boss时会收到提醒'.format(index+1))
+        reply.add_group_msg('* 已预约Boss[{}], 当此Boss可供挑战时会收到提醒'.format(index+1))
         await reply.send() 
 
 #取消预约
