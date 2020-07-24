@@ -6,6 +6,6 @@ cmdList = {
     '^.jrrp$':jrrp,
     '^.*有无雀魂.*$':majang,
     '^.*雀魂.缺.+$':majang,
-    '一键乳泠':ruling,
+    '一键乳泠$':ruling,
     '^.*granbluefantasy\.jp.*$':qikongshi
 }

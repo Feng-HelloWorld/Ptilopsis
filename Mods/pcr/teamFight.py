@@ -21,8 +21,8 @@ data = loadSettings(dataPath)
 #加入公会
 async def jiaru(reply:Reply, text:str):
     '''加入公会'''
+    
     if reply.group_id() in cfg['bot_on']:
-
         reply.add_group_msg('* 该功能已被禁用，请联系管理员')
         await reply.send()
         '''
@@ -86,7 +86,10 @@ async def tichu(reply:Reply, text:str):
 async def zhuangtai(reply:Reply, text:str):
     '''状态'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             r = await rank(reply, 'string')
             reply.add_group_msg("* 当前第{}周目Boss[{}] 剩余血量[{:,d}]\n{}".format(data['term'], data['boss'], data['hp'], r))
             await reply.send()
@@ -101,7 +104,10 @@ async def zhuangtai(reply:Reply, text:str):
 async def rank(reply:Reply, text:str):
     '''获取公会排名'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             #检查是否已获取到最新数据
             if time.time()-data['rank'][1]<1800:
                 rank = data['rank'][0]
@@ -152,7 +158,10 @@ async def rank(reply:Reply, text:str):
 async def baodao(reply:Reply, text:str):
     '''报刀'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             await dayChange(reply)
             damage=int(text[2:])
             if damage<1:
@@ -215,7 +224,10 @@ async def baodao(reply:Reply, text:str):
 async def weidao(reply:Reply, text:str):
     '''尾刀'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             await dayChange(reply)
             damage = data['hp']
             if data['hp']>cfg['max_damage']:
@@ -279,7 +291,10 @@ async def xiuzheng(reply:Reply, text:str):
 async def chexiao(reply:Reply, text:str):
     '''撤销'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             await dayChange(reply)
             if str(reply.user_id()) in data['today_logs'].keys():
                 #获取数据
@@ -316,7 +331,10 @@ async def chexiao(reply:Reply, text:str):
 async def chadao(reply:Reply, text:str):
     '''查刀'''
     if reply.group_id() in cfg['bot_on']:
-        if str(reply.user_id()) in cfg['member'].keys():
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
             await dayChange(reply)
             damage = data['hp']
             temp = list()
@@ -344,51 +362,115 @@ async def dayChange(reply:Reply):
         
 #挂树
 async def guashu(reply:Reply, text:str):
-    if data['hp']>5000000:
-        reply.add_group_msg('* 救不了救不了')
-        await reply.send() 
+
+    if reply.group_id() in cfg['bot_on']:
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
+            if data['hp']>5000000:
+                reply.add_group_msg('* 救不了救不了')
+                await reply.send() 
+            else:
+                data['tree'].append(reply.user_id())
+                await saveSettings(dataPath, data)
+                reply.add_group_msg('* 挂上了挂上了')
+                await reply.send() 
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
     else:
-        data['tree'].append(reply.user_id())
-        await saveSettings(dataPath, data)
-        reply.add_group_msg('* 挂上了挂上了')
-        await reply.send() 
+        print('[ERRO] 查刀指令未在此群开启')
+
+    
 
 #下树
 async def xiashu(reply:Reply, text:str):
-    if reply.user_id() in data['tree']:
-        data['tree'].remove(reply.user_id())
-        await saveSettings(dataPath, data)
-        reply.add_group_msg('* 下来了下来了')
-        await reply.send() 
+
+    if reply.group_id() in cfg['bot_on']:
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
+            if reply.user_id() in data['tree']:
+                data['tree'].remove(reply.user_id())
+                await saveSettings(dataPath, data)
+                reply.add_group_msg('* 下来了下来了')
+                await reply.send() 
+            else:
+                reply.add_group_msg('* 你在哪你在哪')
+                await reply.send() 
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
     else:
-        reply.add_group_msg('* 你在哪你在哪')
-        await reply.send() 
+        print('[ERRO] 查刀指令未在此群开启')
+
+    
 
 #查树
 async def chashu(reply:Reply, text:str):
-    if len(data['tree'])>0:
-        temp = "* 爬树爱好者名单:"
-        for id in data['tree']:
-            temp += "\n- {}".format(  cfg['member_name'][str(  id  )]  )
-        reply.add_group_msg(temp)
+
+    if reply.group_id() in cfg['bot_on']:
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
+            if len(data['tree'])>0:
+                temp = "* 爬树爱好者名单:"
+                for id in data['tree']:
+                    temp += "\n- {}".format(  cfg['member_name'][str(  id  )]  )
+                reply.add_group_msg(temp)
+            else:
+                reply.add_group_msg('* 树上无人，岁月静好')
+            await reply.send()
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
     else:
-        reply.add_group_msg('* 树上无人，岁月静好')
-    await reply.send()
+        print('[ERRO] 查树指令未在此群开启')
+
+    
 
 #预约
 async def yuyue(reply:Reply, text:str):
-    index = int(text[2:])-1
-    if reply.user_id() not in data['subscribe'][index]:
-        data['subscribe'][index].append(reply.user_id())
-        await saveSettings(dataPath, data)
-        reply.add_group_msg('* 已预约Boss[{}], 当此Boss可供挑战时会收到提醒'.format(index+1))
-        await reply.send() 
+
+    if reply.group_id() in cfg['bot_on']:
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
+            index = int(text[2:])-1
+            if reply.user_id() not in data['subscribe'][index]:
+                data['subscribe'][index].append(reply.user_id())
+                await saveSettings(dataPath, data)
+                reply.add_group_msg('* 已预约Boss[{}], 当此Boss可供挑战时会收到提醒'.format(index+1))
+                await reply.send() 
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
+    else:
+        print('[ERRO] 预约指令未在此群开启')
+
+
 
 #取消预约
 async def quxiaoyuyue(reply:Reply, text:str):
-    index = int(text[4:])-1
-    if reply.user_id() in data['subscribe'][index]:
-        data['subscribe'][index].remove(reply.user_id())
-        await saveSettings(dataPath, data)
-        reply.add_group_msg('* 已取消预约Boss[{}]'.format(index+1))
-        await reply.send() 
+
+    if reply.group_id() in cfg['bot_on']:
+        if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
+            reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
+            await reply.send()
+        elif str(reply.user_id()) in cfg['member'].keys():
+            index = int(text[4:])-1
+            if reply.user_id() in data['subscribe'][index]:
+                data['subscribe'][index].remove(reply.user_id())
+                await saveSettings(dataPath, data)
+                reply.add_group_msg('* 已取消预约Boss[{}]'.format(index+1))
+                await reply.send() 
+        else:
+            reply.add_group_msg('* 请先加入公会\n- 指令:"加入公会"+13位数字ID')
+            await reply.send()   
+    else:
+        print('[ERRO] 取消预约指令未在此群开启')
+

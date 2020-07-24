@@ -67,7 +67,7 @@ async def checkAttendencePic(name_list:tuple):
     line_space = 33
     new_col = 500
     count = 0
-    img_draw.text( (1065, 80), '[{}]'.format(len(name_list)), font=ttf, fill=(255,162,162) )
+    left_sum = 0
     for record in name_list:
         if count==15:
             left_side+=new_col
@@ -76,6 +76,9 @@ async def checkAttendencePic(name_list:tuple):
         img_draw.text( (left_side, top), '[{}]'.format(record[0]), font=ttf, fill=(0,0,0) )
         img_draw.text((left_side+50, top), '{}'.format(record[1][:12]), font=ttf, fill=(100,100,100) )
         count+=1  
+        left_sum += record[0]
+    img_draw.text( (1065, 50), '[{}]人'.format(len(name_list)), font=ttf, fill=(255,162,162) )
+    img_draw.text( (1065, 80), '[{}]刀'.format(left_sum), font=ttf, fill=(255,162,162) )
     await savePic(image,'checkAttendencePic')
 
 

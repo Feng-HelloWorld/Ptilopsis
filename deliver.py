@@ -45,7 +45,16 @@ bot = nonebot.get_bot()
 #消息处理
 @bot.on_message('private') 
 async def handle_group_message(ctx:Context_T):
-    pass
+    text = ctx['raw_message']
+    sender = ctx.get('sender').get('user_id')
+    print(text, sender)
+    if sender in [3426285834,1051835124]:
+        print(text, sender)
+        if re.match('^\.unban[0-9]+$', text):
+            group = text[6:]
+            print(group)
+            await bot.set_group_ban(group_id=group,user_id=sender,duration=0)
+
 
 
 #群消息处理
