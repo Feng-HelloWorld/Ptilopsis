@@ -33,7 +33,7 @@ for name in dirList:
     if '.' not in name:
         print('==Import mod: {:=<10s}========'.format(name))
         sys.path.append('./Mods/'+name)
-        mod = importlib.import_module(name+'.Cmd')
+        mod = importlib.import_module(name+'.Cmd-'+name)
         for regex, func in mod.cmdList.items():
             print('* Success:',regex,func)
         cmds.update(mod.cmdList)

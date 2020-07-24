@@ -66,7 +66,7 @@ def fileName(key_word:str, day = timeS()):
     '''根据传入的关键字，时区（默认为UTC+8）和每日刷新时间（默认为凌晨0点）生成并返回形如[key] 2000-01-01的文件名'''
     return "[{}] {}".format(key_word, time.strftime("%Y-%m-%d",day) )
 
-
+#标准CD存储类
 class CD:
     '''用于判断指令冷却时间的类'''
 
@@ -75,16 +75,23 @@ class CD:
     __last_time = dict()#上一次触发指令的时间
 
     def __init__(self, cd:int=0, mode:str='D'):
-        ''''''
+        '''初始化函数，默认CD时长为0秒，CD类型为Default（D）\n
+        Default:所有用户共用1个CD\n
+        Group:每个群单独记录CD\n
+        Person:每个人单独记录CD'''
         self.__cd = cd
         self.__mode = mode
         if 'D' in mode:
-            self.__last_time['Default']=Time('2012-12-12 12:12:12 [8]')        
+            self.__initRecord('Default')    
+
+    def __initRecord(self, ID:str):
+        '''在字典中新建CD用户或群的CD记录'''
+        self.__last_time[ID]=Time('2012-12-12 12:12:12 [8]') 
 
     def cd(self):
         return self.__cd
 
-    def check(self):
+    def check(self, ID='000'):
         ''''''
         now = Time()
         if 'D' in self.__mode:
@@ -92,9 +99,20 @@ class CD:
                 self.__last_time['Default']=now
                 return (True,'Proved')
             else:
-                return (False,str(self.__last_time['Default']+self.__cd))
+                return (False,int(self.__last_time['Default']+self.__cd-now))
+        elif 'G' in  self.__mode:pass
+        elif 'P' in  self.__mode:
+            if ID not in self.__last_time:
+                self.__initRecord(ID)
+            if now-self.__last_time[ID]>self.__cd:
+                self.__last_time[ID]=now
+                return (True,'Proved')
+            else:
+                return (False,int(self.__last_time[ID]+self.__cd-now))
 
 
+
+#json数据读取
 def loadSettings(file_path:str):
     '''读取返回指定路径下的json数据文件'''
     fp = open(file_path, 'r',encoding="utf-8") 
@@ -102,14 +120,17 @@ def loadSettings(file_path:str):
     fp.close()
     return cfg
 
+#json数据储存
 async def saveSettings(file_path:str, cfg:dict):
     '''将内存中的json数据存入指定文件'''
     fp = open(file_path, 'w',encoding="utf-8") 
     json.dump(cfg,fp,indent=4,ensure_ascii=False)
     fp.close()
 
+#log文件记录
 async def writeLog(file_path:str, record:str):
     '''在指定日志文件中追加记录'''
     fp = open(file_path, 'a', encoding="utf-8")
     fp.write(record+'\n')
     fp.close()
+
