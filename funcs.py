@@ -100,7 +100,15 @@ class CD:
                 return (True,'Proved')
             else:
                 return (False,int(self.__last_time['Default']+self.__cd-now))
-        elif 'G' in  self.__mode:pass
+        elif self.__mode[0]=='E':
+            check_time_zone = int(self.__mode[1:])
+            if ID not in self.__last_time:
+                self.__initRecord(ID)
+            if not now.isSameDay(self.__last_time[ID], check_time_zone):
+                self.__last_time[ID]=now
+                return (True,'Proved')
+            else:
+                return (False,'日期未变更')
         elif 'P' in  self.__mode:
             if ID not in self.__last_time:
                 self.__initRecord(ID)

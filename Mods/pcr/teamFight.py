@@ -23,6 +23,7 @@ async def jiaru(reply:Reply, text:str):
     '''加入公会'''
     
     if reply.group_id() in cfg['bot_on']:
+        '''
         reply.add_group_msg('* 该功能已被禁用，请联系管理员')
         await reply.send()
         '''
@@ -39,7 +40,7 @@ async def jiaru(reply:Reply, text:str):
             await saveSettings(cfgPath, cfg)
             reply.add_group_msg('* {}已加入本群公会\n- 注册ID [{}]'.format( reply.user_name(), cfg['member'][str(reply.user_id())] ))
             await reply.send()    
-        '''        
+                
     else:
         print('[ERRO] 加入公会指令未在此群开启')
 
@@ -82,6 +83,25 @@ async def tichu(reply:Reply, text:str):
     else:
         print('[ERRO] 踢出公会指令未在此群开启或没有管理员权限')
 
+async def mingdan(reply:Reply, text:str):
+    '''显示当前会内名单'''
+    if reply.group_id() in cfg['bot_on'] and reply.user_id() in cfg['admin']:
+        id = reply.user_id()
+        if (str(id) in cfg['member'].keys()) or (id in cfg['admin']):
+            name_list = '当前公会名单:'
+            count = 0
+            for qq, name in cfg['member_name'].items():
+                name_list+='\n- {}[{}]'.format(name, qq)
+                count+=1
+            name_list+='\n* 共计[{}]人'.format(count)
+            reply.add_group_msg(name_list)
+            await reply.send()
+        else:
+            reply.add_group_msg('* 用户[{}]不存在'.format( id ))
+            await reply.send()
+    else:
+        print('[ERRO] 查看名单指令未在此群开启或没有管理员权限')
+
 #状态
 async def zhuangtai(reply:Reply, text:str):
     '''状态'''
@@ -89,7 +109,7 @@ async def zhuangtai(reply:Reply, text:str):
         if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
             reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
             await reply.send()
-        elif str(reply.user_id()) in cfg['member'].keys():
+        elif str(reply.user_id()) in cfg['member'].keys() or (reply.user_id() in cfg['admin']):
             r = await rank(reply, 'string')
             reply.add_group_msg("* 当前第{}周目Boss[{}] 剩余血量[{:,d}]\n{}".format(data['term'], data['boss'], data['hp'], r))
             await reply.send()
@@ -107,7 +127,7 @@ async def rank(reply:Reply, text:str):
         if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
             reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
             await reply.send()
-        elif str(reply.user_id()) in cfg['member'].keys():
+        elif str(reply.user_id()) in cfg['member'].keys() or (reply.user_id() in cfg['admin']):
             #检查是否已获取到最新数据
             if time.time()-data['rank'][1]<1800:
                 rank = data['rank'][0]
@@ -120,17 +140,19 @@ async def rank(reply:Reply, text:str):
                 header = {
                     'Host': 'service-kjcbcnmw-1254119946.gz.apigw.tencentcs.com',
                     'Connection': 'keep-alive',
-                    'Content-Length': '21',
+                    'Content-Length': '33',
                     'DNT': '1',
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
                     'Content-Type': 'application/json',
+                    'Custom-Source': 'Ptilopsis',
                     'Origin': 'https://kengxxiao.github.io',
                     'Sec-Fetch-Site': 'cross-site',
                     'Sec-Fetch-Mode': 'cors',
                     'Sec-Fetch-Dest': 'empty',
                     'Referer': 'https://kengxxiao.github.io/Kyouka/'
                 }
-                result = requests.post('https://service-kjcbcnmw-1254119946.gz.apigw.tencentcs.com/name/0', data=json.dumps({'clanName':'桃星'}), headers=header)
+                result = requests.post('https://service-kjcbcnmw-1254119946.gz.apigw.tencentcs.com/name/0', data=json.dumps({'history':0,'clanName':'桃星'}), headers=header)
+                print("=====\n= {}\n=====".format(result.json()))
                 if result.status_code==200:
                     temp = result.json()
                     rank = temp['data'][0]['rank']
@@ -265,6 +287,8 @@ async def weidao(reply:Reply, text:str):
                         temp = '[下树通知] '
                         for id in data['tree']:
                             temp += ' [CQ:at,qq={}] '.format(id)
+                        data['tree']=list()
+                        await saveSettings(dataPath, data)
                         reply.add_group_msg(temp)
                         await reply.send() 
                     #预约
@@ -334,7 +358,7 @@ async def chadao(reply:Reply, text:str):
         if reply.time()>Time(cfg['open_time'][1]) or reply.time()<Time(cfg['open_time'][0]):
             reply.add_group_msg('* 当前不在公会战开放时间\n- 开始时间:{}\n- 结束时间:{}'.format( cfg['open_time'][0],cfg['open_time'][1] ))
             await reply.send()
-        elif str(reply.user_id()) in cfg['member'].keys():
+        elif str(reply.user_id()) in cfg['member'].keys() or (reply.user_id() in cfg['admin']):
             await dayChange(reply)
             damage = data['hp']
             temp = list()

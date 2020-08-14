@@ -19,6 +19,8 @@ class Reply:
         self.__user_name = user_name
         self.__group_id = group_id
         self.__time = Time()
+        self.__messages_for_private=list()
+        self.__messages_for_group=list()
 
     def add_group_msg(self, msg:str, id=000):
         if id==000:id=self.__group_id
@@ -46,13 +48,17 @@ class Reply:
             id = message[1]
             print("==GROUP REPLY {:=<12d}======\n{}".format(id,msg))
             await bot.send_group_msg(group_id=id,message=msg)
+
         for message in self.__messages_for_private:
             msg = message[0]
             id = message[1]
             print("==PRIVATE REPLY {:=<12d}====\n{}".format(id,msg))
             await bot.send_private_msg(user_id=id,message=msg)
-        self.__messages_for_group.clear()
+
+        self.__messages_for_private=list()
         self.__messages_for_private.clear()
+        self.__messages_for_group=list()
+        self.__messages_for_group.clear()
         print("="*32)
 
 async def checkUserInfo(group_id, user_id):

@@ -55,7 +55,7 @@ async def handle_group_message(ctx:Context_T):
             print(group)
             await bot.set_group_ban(group_id=group,user_id=sender,duration=0)
 
-
+reply_dict = dict()
 
 #群消息处理
 @bot.on_message('group') 
@@ -63,7 +63,6 @@ async def handle_group_message(ctx:Context_T):
     
     group_id = ctx.get('group_id')
     if group_id in cfg['bot_on']:
-        
         text = ctx['raw_message']
         global cmds
         for key, func in cmds.items():

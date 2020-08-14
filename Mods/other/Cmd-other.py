@@ -5,6 +5,6 @@ from daily import majang, qikongshi
 cmdList = {
     '^.jrrp$':jrrp,
     '^.*有无雀魂.*$':majang,
-    '^.*雀魂.缺.+$':majang
+    '^.*雀魂.缺.+$':majang,
     '^.*granbluefantasy\.jp.*$':qikongshi
 }
