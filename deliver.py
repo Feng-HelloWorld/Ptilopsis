@@ -44,7 +44,7 @@ bot = nonebot.get_bot()
 
 #消息处理
 @bot.on_message('private') 
-async def handle_group_message(ctx:Context_T):
+async def handle_private_message(ctx:Context_T):
     text = ctx['raw_message']
     sender = ctx.get('sender').get('user_id')
     print(text, sender)
@@ -60,13 +60,15 @@ reply_dict = dict()
 #群消息处理
 @bot.on_message('group') 
 async def handle_group_message(ctx:Context_T):
-    
+    print("Got New Message")
     group_id = ctx.get('group_id')
     if group_id in cfg['bot_on']:
         text = ctx['raw_message']
         global cmds
         for key, func in cmds.items():
+            #print("Found collection")
             if re.match(key, text):
+                print("Found command")
                 reply = Reply(ctx.get('sender').get('user_id'), __getName(ctx), group_id)
                 await func(reply, text)
 
