@@ -1,20 +1,13 @@
 import nonebot
 import re
 from nonebot.typing import Context_T
-import time
 from random import choice, randint
 import json
-
+import asyncio
 import sys
-sys.path.append('./coc')
-from coc.rd import rd
-from coc.ra import ra
-
+import os
+import importlib
 from reply import Reply
-from webGet import bvSearch, biliSearch
-from jrrp import jrrp, first_jrrp
-from voice import sing, sleep
-from image_check import imgCheck
 
 cfg = dict()
 
@@ -23,83 +16,63 @@ def loadSettings():
     global cfg
     cfg = json.load(fp)
 
+def saveSettings():
+    fp = open('./deliver.json', 'w',encoding="utf-8") 
+    global cfg
+    cfg = json.dump(fp,indent=4,ensure_ascii=True)
+
 loadSettings()
 
-
+################
+#模块导入代码
+################
+sys.path.append('./Mods')
+dirList = os.listdir('./Mods/')
+cmds = dict()
+for name in dirList:
+    if '.' not in name:
+        print('==Import mod: {:=<10s}========'.format(name))
+        sys.path.append('./Mods/'+name)
+        mod = importlib.import_module(name+'.Cmd-'+name)
+        for regex, func in mod.cmdList.items():
+            print('* Success:',regex,func)
+        cmds.update(mod.cmdList)
+        print('='*32)
+################
 
 bot = nonebot.get_bot()
 
+#消息处理
+@bot.on_message('private') 
+async def handle_private_message(ctx:Context_T):
+    text = ctx['raw_message']
+    sender = ctx.get('sender').get('user_id')
+    print(text, sender)
+    if sender in [3426285834,1051835124]:
+        print(text, sender)
+        if re.match('^\.unban[0-9]+$', text):
+            group = text[6:]
+            print(group)
+            await bot.set_group_ban(group_id=group,user_id=sender,duration=0)
+
+reply_dict = dict()
+
 #群消息处理
 @bot.on_message('group') 
-async def handle_group_message(ctx: Context_T):
-    print("\n===NEW MESSAGE INCOME=================")
-    time_num = time.mktime( time.gmtime( time.time() ) ) + 3600*8 #GMT+8
-    time_str = time.strftime( "%b %d %a %H:%M:%S", time.gmtime( time.time()+ 3600*8 ) )
-    print( "* TIME(GMT+8) {}   {}".format(time_num, time_str) )
-    user_id = ctx.get('sender').get('user_id')
-    user_name = __getName(ctx)
+async def handle_group_message(ctx:Context_T):
+    print("Got New Message")
     group_id = ctx.get('group_id')
-    print("* GROUP [{}]   USER {} [{}]".format(group_id, user_name, user_id))
-    text = ctx['raw_message']
-    print(text)
-    msg = Reply(user_id, user_name, group_id, time_num)
-    print("===CTX=======\n",ctx)
-    #如果消息为纯文本
-    if __text_only(ctx):
-        #消息文本
-        if text=='wwssaaddabab':
-            msg.add_group_msg("Test success.",596404376)
-            await msg.send()
-        elif re.match("^\.jrrp$",text,re.I):
-            jrrp(msg)
-            await msg.send()
-        elif re.match("^\.sleep$",text,re.I) and (msg.group_id() in cfg["voice_on"]):
-            sleep(msg)
-            await msg.send()
-        elif re.match("^.*granbluefantasy\.jp.*$",text,re.I):
-            msg.add_group_msg("到处都是沙雕骑空士的陷阱.jpg")
-            await msg.send()
-        elif re.match('^\.r\d*d\d*.*$',text,re.I):
-            rd(text,msg)
-            await msg.send()
-        elif re.match('^\.ra[ ]?\d+$',text,re.I):
-            ra(text,msg)
-            await msg.send()
-        else:
-            #混沌语音
-            if msg.group_id() in cfg["voice_on"]:
-                sing(text,msg)
-            #检测bv号
-            if msg.group_id() in cfg["bv_search_on"]:
-                bvSearch(text,msg)
-            #每日首次发非指令消息时自动执行jrrp
-            if msg.group_id() in cfg["first_jrrp_on"]:
-                first_jrrp(msg)
-            await msg.send()
+    if group_id in cfg['bot_on']:
+        text = ctx['raw_message']
+        global cmds
+        for key, func in cmds.items():
+            #print("Found collection")
+            if re.match(key, text):
+                print("Found command")
+                reply = Reply(ctx.get('sender').get('user_id'), __getName(ctx), group_id)
+                await func(reply, text)
 
-    #如果是bilibili小程序分享
-    elif(is_bili_share(ctx) and (msg.group_id() in cfg["bv_search_on"])):
-        name = is_bili_share(ctx)
-        biliSearch(name, msg)
-        await msg.send()
-    #鉴黄
-    elif ctx.get("group_id") in cfg["imgCheck_list"]:
-        for message in ctx['message']:
-            if message['type']=='image':
-                if imgCheck(message['data']['url']):
-                    try:
-                        await bot.delete_msg(message_id=ctx['message_id'])
-                        await bot.set_group_ban(group_id=ctx['group_id'],user_id=ctx['user_id'],duration=60)
-                    except:
-                        print("* 撤回失败")
-                
-
-        
-
-    del msg
-    print("===FINISH=============================\n")
-
-def __text_only(ctx:Context_T):
+def __text_only(ctx):
     '''检查此消息是否只含有文本'''
     msg=ctx['message']
     if len(msg)==1:
@@ -107,22 +80,10 @@ def __text_only(ctx:Context_T):
             return True
     return False
 
-
-
-def __getName(ctx:Context_T):
+def __getName(ctx):
     """获取昵称, 没有就返回用户名"""
     nick = ctx['sender']['card']
     name = ctx['sender']['nickname']
     if nick=='': return name
     else: return nick
 
-def is_bili_share(ctx: Context_T):
-    """检查此消息是否为哔哩哔哩小程序"""
-    try:
-        if(ctx['message'][0]["data"]["title"]=="&#91;QQ小程序&#93;哔哩哔哩"):
-            msg = ctx['message'][0]["data"]["content"]
-            return re.search('desc":"[^}]*"',msg).group()[7:-1]
-        else:
-            return False
-    except:
-        return False
