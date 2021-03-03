@@ -57,7 +57,7 @@ def rd(text:str,msg:gMsgP):
             detail = str(result[1])
             log.add([time,id,name,reason,cmd,sum,detail])
             reply = f'* {name}{choice(adj_list_1)}地扔了一次{comment}骰子\n- {cmd} 出目[{sum}]'
-            if len(result[1])>1:reply+=f'\n- 细则:{detail}'
+            if len(result[1])>1:reply+=f'\n- 细则{detail}'
             return MessageChain.create([Plain(reply)])
     except:
         return MessageChain.create([Plain('[!] 你说这些谁懂啊？')])
