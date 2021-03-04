@@ -2,10 +2,12 @@ from funcs.msgPack import gMsgP
 from funcs.dice import dice
 from funcs.dataBase import DataBase
 from funcs.time import Time
+from funcs.dataAnalysis import drawHistogram
 from libs.dataBaseError import *
 from random import choice
+import sys
 from graia.application.message.chain import MessageChain
-from graia.application.message.elements.internal import Plain
+from graia.application.message.elements.internal import Plain, Image
 
 #日志数据库导入
 try:
@@ -23,6 +25,9 @@ def cmd_group(mp:gMsgP):
     text = mp.msg.asDisplay()
     if re.match('^\.r(h?)(\d*d\d*[^ ]*)( \S+)?$',text):
         return rd(text, mp)
+    elif re.match('^直方图\[.+\]$',text):
+        return histogram(text)
+        
     else:
         return False
 
@@ -63,8 +68,13 @@ def rd(text:str,msg:gMsgP):
         return MessageChain.create([Plain('[!] 你说这些谁懂啊？')])
 
 
-
-
+def histogram(text):
+    try:
+        data = text[4:-1].split(',')
+        data = list(map(int,data))
+        return MessageChain.create([Image.fromLocalFile(drawHistogram(data))])
+    except:
+        return MessageChain.create([Plain('[!] 你说这些谁懂啊？')])
 
 
 

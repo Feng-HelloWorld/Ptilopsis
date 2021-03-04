@@ -229,7 +229,7 @@ class GameBoard:
         self.path = f'./data/gomoku/{self.game_id}.jpg'
         image = Image.open('./data/gomoku/bg2.jpg')
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype('./data/gomoku/pf-light.ttf',38)
+        font = ImageFont.truetype('./data/fonts/pf-light.ttf',38)
         draw.text((600,2),f'[{self.game_id}]',font=font,fill=(35,35,35))
         image.save(self.path)
 
