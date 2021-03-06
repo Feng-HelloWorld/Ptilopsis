@@ -106,9 +106,16 @@ class Table:
         self.__connect.commit()
         return data
 
-    #数据修改（未完工）
-    def update():
-        pass
+    #数据修改
+    def update(self, requirements:list, key:str, value):
+        '''修改数据，返回修改后的数据'''
+        require_list = " and ".join(requirements)
+        if type(value)==str:value=f"'{value}'"
+        print('数据库执行操作：',f"UPDATE {self.__name} SET {key} = {value} WHERE {require_list};")
+        self.__cursor.execute(f"UPDATE {self.__name} SET {key} = {value} WHERE {require_list};")
+        self.__connect.commit()
+        data = self.check(requirements=requirements)
+        return data        
 
     #数据查询
     def check(self, requirements:list=None, keys:list=['*'] ):
@@ -120,7 +127,8 @@ class Table:
         if requirements:
             require_list = "where "+" and ".join(requirements)
         try:
-            temp = list(self.__cursor.execute(f"SELECT {values}  from {self.__name} {require_list}"))
+            print('数据库执行操作：',f"SELECT {values}  from {self.__name} {require_list};")
+            temp = list(self.__cursor.execute(f"SELECT {values}  from {self.__name} {require_list};"))
         except (sqlite3.IntegrityError, sqlite3.OperationalError) as msg:
             raise OperationalError(error_msg=str(msg))
         else:

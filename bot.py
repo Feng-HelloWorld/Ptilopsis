@@ -40,8 +40,8 @@ bcc = Broadcast(loop=loop)
 app = GraiaMiraiApplication(
     broadcast=bcc,
     connect_info=Session(
-        host="http://172.17.0.1:8080", # 填入 httpapi 服务运行的地址
-        # host="http://47.98.229.41:8080", # 填入 httpapi 服务运行的地址
+        # host="http://172.17.0.1:8080", # 填入 httpapi 服务运行的地址
+        host="http://47.98.229.41:8080", # 填入 httpapi 服务运行的地址
         authKey="Ptilopsis", # 填入 authKey
         account=1803983079, # 你的机器人的 qq 号
         websocket=True # Graia 已经可以根据所配置的消息接收的方式来保证消息接收部分的正常运作.
@@ -55,6 +55,8 @@ async def friend_message_handler(message: MessageChain,app: GraiaMiraiApplicatio
 
 @bcc.receiver("GroupMessage")
 async def group_message_handler(message: MessageChain, app: GraiaMiraiApplication, group: Group, member: Member):
+    print(message)
+    print(message.asDisplay())
     for func in group_cmds.values():
         msg = func(gMsgP(group, member, message))
         if msg:
