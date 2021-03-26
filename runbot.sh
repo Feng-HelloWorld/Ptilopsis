@@ -3,5 +3,7 @@ pip install graia-application-mirai
 pip install arc-api
 pip install pillow
 pip install seaborn
+pip install pymysql
+pip install flask_sqlalchemy
 cd /opt
 python /opt/bot.py
