@@ -55,10 +55,15 @@ async def friend_message_handler(message: MessageChain,app: GraiaMiraiApplicatio
 
 @bcc.receiver("GroupMessage")
 async def group_message_handler(message: MessageChain, app: GraiaMiraiApplication, group: Group, member: Member):
+    print(message)
+    mp = gMsgP(group, member, message)
+    print(message)
     for func in group_cmds.values():
-        msg = func(gMsgP(group, member, message))
+        msg = func(mp)
         if msg:
-            await app.sendGroupMessage(group,msg)
+            if type(msg) is not list:msg=[msg]
+            for i in msg:
+                await app.sendGroupMessage(group,i)
             break
 
 

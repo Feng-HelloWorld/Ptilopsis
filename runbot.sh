@@ -4,4 +4,4 @@ pip install arc-api
 pip install pillow
 pip install seaborn
 cd /opt
-python /opt/bot.py
+python -u /opt/bot.py

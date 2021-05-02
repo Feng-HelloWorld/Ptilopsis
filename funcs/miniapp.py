@@ -14,6 +14,7 @@ def __set_button(b):
     result = result[:-1] +' ]'
     return result
 
+
 u = 'https://static-s.aa-cdn.net/img/ios/1454663939/3359d0e7d8badb7f9a4ac0e2149ebb15?v=1'
 
 def miniapp(prompt="咕咕", app_name="白咕咕", icon_url=u, title="咕咕咕~咕咕咕~", app_data=[], app_button=[]):
