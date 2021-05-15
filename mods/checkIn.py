@@ -30,10 +30,7 @@ def __check_in(mp:gMsgP, hello='签到成功'):
             appB = []
             app = App(prompt="签到",app_name=hello, title=user.name,app_data=appD, app_button=appB)
             xml = Xml(xml='<?xml version="1.0" encoding="utf-8"?>\n<msg templateID="12345" action="web" brief="庆典筹备" serviceID="1" url="https://ak.hypergryph.com/activity/preparation?source=game"><item layout="2"><picture cover="http://hz.shirolovol.cn:3001/ptilopsis01.jpg"/><title>庆典筹备计划</title><summary>唔，你可能需要这个，大概···</summary></item><source/></msg>', type='Xml')
-            msg1 = MessageChain.create([app])
-            msg2 = MessageChain.create([xml])
-            #msg = MessageChain.join(msg1, msg2)
-            return [msg1,msg2]
+            return MessageChain.create([app])
     else:
         if hello=='签到成功':
             return MessageChain.create([Plain("* 签到仅在4-10点开放")])
