@@ -7,12 +7,12 @@ from app.config.settings import settings
 # from app.api.v1 import user
 # from app.api.v1 import token
 from app.api.v1.dnd import equipment
-# from app.api.v1.dnd import dnd
+from app.api.v1.dnd import identity
 from app.api.v1.dnd import card
 #导入插件
 from app.models.base import db
 
-# from app.libs.error import ServerException
+from app.libs.error import ServerException
 
 class JSONEncoder(_JSONEncoder):
     def default(self, o):
@@ -33,6 +33,7 @@ def register_blueprint(app):
     # app.register_blueprint(user.api)
     # app.register_blueprint(token.api)
     app.register_blueprint(equipment.api)
+    app.register_blueprint(identity.api)
     app.register_blueprint(card.api)
     # app.register_blueprint(dnd.api)
 
