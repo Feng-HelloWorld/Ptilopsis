@@ -18,12 +18,17 @@ class SuccessResponse(Response):
         
         Response.__init__(self,result,status=self.code)
 
-class CheckSuccess(SuccessResponse):
-    msg = "Check Successfuly"
-    def __init__(self,result):
-        self.data = {"result":result}
-        SuccessResponse.__init__(self)
+class LoginSuccess(SuccessResponse):
+    msg = 'Login Success'
+    
 
-class CreateSuccess(SuccessResponse):
-    msg = 'Here is your token'
-    code = 201
+
+# class CheckSuccess(SuccessResponse):
+#     msg = "Check Successfuly"
+#     def __init__(self,result):
+#         self.data = {"result":result}
+#         SuccessResponse.__init__(self)
+
+# class CreateSuccess(SuccessResponse):
+#     msg = 'Here is your token'
+#     code = 201

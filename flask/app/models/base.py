@@ -10,7 +10,7 @@ class Base(db.Model):
     def __getitem__(self,item):
         return getattr(self,item)
 
-    def creat(self):
+    def create(self):
         db.session.add(self)
         db.session.commit()
 
