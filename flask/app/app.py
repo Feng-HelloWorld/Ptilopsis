@@ -9,6 +9,8 @@ from app.config.settings import settings
 from app.api.v1.dnd import equipment
 from app.api.v1.dnd import identity
 from app.api.v1.dnd import card
+from app.api.v1.dnd import magic
+
 #导入插件
 from app.models.base import db
 
@@ -34,6 +36,7 @@ def register_blueprint(app):
     # app.register_blueprint(token.api)
     app.register_blueprint(equipment.api)
     app.register_blueprint(identity.api)
+    app.register_blueprint(magic.api)
     app.register_blueprint(card.api)
     # app.register_blueprint(dnd.api)
 
